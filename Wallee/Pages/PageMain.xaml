@@ -8,7 +8,22 @@
       d:DesignHeight="450" d:DesignWidth="800"
       Title="PageMain">
 
-    <Grid Background="Red">
-        
+    <Grid Background="White">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition />
+            <ColumnDefinition Width="auto"/> 
+            <ColumnDefinition />
+        </Grid.ColumnDefinitions>
+        <Rectangle Grid.Column="1" Width="0.5" Fill="Black"></Rectangle>
+        <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" FontFamily="Roboto Lt" FontSize="14">           
+    <Hyperlink FontSize="24" TextDecorations="{x:Null}" FontWeight="Thin" Foreground="Black">
+        Login
+    </Hyperlink>
+        </TextBlock>
+        <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" FontFamily="Roboto Lt" FontSize="14" Grid.Column="2">           
+    <Hyperlink FontSize="24" TextDecorations="{x:Null}" FontWeight="Thin" Foreground="Black">
+        Next
+    </Hyperlink>
+        </TextBlock>
     </Grid>
 </Page>
