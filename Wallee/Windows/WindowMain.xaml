@@ -8,7 +8,7 @@
         DataContext="{Binding RelativeSource={RelativeSource Self}}"
         Title="WindowMain" Height="450" Width="800"
         >
-    <Frame Content="{Binding SourcePage}">
+    <Frame Content="{Binding SourcePage}" NavigationUIVisibility="Hidden">
 
     </Frame>
     
