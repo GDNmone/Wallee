@@ -4,17 +4,17 @@
 winexe
 C#
 .cs
-D:\Учеба\Диплом\Wallee\Wallee\obj\Debug\
+E:\GIT\CSharp\Wallee\Wallee\obj\Debug\
 Wallee
 none
 false
 DEBUG;TRACE
-D:\Учеба\Диплом\Wallee\Wallee\App.xaml
-31054026606
+E:\GIT\CSharp\Wallee\Wallee\App.xaml
+41442450687
 
-121487494582
+131109447075
 13-1142990016
-Pages\log.xaml;Pages\PageMain.xaml;Windows\WindowMain.xaml;
+Pages\PageLogin.xaml;Pages\PageMain.xaml;UserControls\ControlScrollEllipse.xaml;Windows\WindowMain.xaml;
 
 True
 

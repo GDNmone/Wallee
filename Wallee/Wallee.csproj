@@ -54,11 +54,15 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Page Include="Pages\log.xaml">
+    <Page Include="Pages\PageLogin.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Pages\PageMain.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UserControls\ControlScrollEllipse.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -70,11 +74,14 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Pages\log.xaml.cs">
-      <DependentUpon>log.xaml</DependentUpon>
+    <Compile Include="Pages\PageLogin.xaml.cs">
+      <DependentUpon>PageLogin.xaml</DependentUpon>
     </Compile>
     <Compile Include="Pages\PageMain.xaml.cs">
       <DependentUpon>PageMain.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UserControls\ControlScrollEllipse.xaml.cs">
+      <DependentUpon>ControlScrollEllipse.xaml</DependentUpon>
     </Compile>
     <Compile Include="Windows\IBaseWindow.cs" />
     <Compile Include="Windows\WindowMain.xaml.cs">

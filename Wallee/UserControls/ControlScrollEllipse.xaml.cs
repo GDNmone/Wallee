@@ -13,14 +13,14 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace Wallee.Pages
+namespace Wallee.UserControls
 {
     /// <summary>
-    /// Логика взаимодействия для Page1.xaml
+    /// Логика взаимодействия для ControlScrollEllipse.xaml
     /// </summary>
-    public partial class Page1 : Page
+    public partial class ControlScrollEllipse : UserControl
     {
-        public Page1()
+        public ControlScrollEllipse()
         {
             InitializeComponent();
         }
