@@ -10,11 +10,11 @@ none
 false
 DEBUG;TRACE
 E:\GIT\CSharp\Wallee\Wallee\App.xaml
-2320313818
+3-538685537
 
-1171471096
+12-737728243
 13-1142990016
-Pages\PageMain.xaml;Windows\WindowMain.xaml;
+Pages\PageMain.xaml;UserControls\ControlScrollEllipse.xaml;Windows\WindowMain.xaml;
 
-True
+False
 
