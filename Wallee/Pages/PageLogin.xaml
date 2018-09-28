@@ -16,7 +16,7 @@
 
                 <TextBlock Width="{Binding ElementName=TbPassword, Path=ActualWidth}" TextAlignment="Right" DockPanel.Dock="Right" Text="Login:" FontFamily="Roboto" FontSize="20" FontWeight="Thin" Foreground="Black"
                        HorizontalAlignment="Center" VerticalAlignment="Center"  />
-                <TextBox Margin="0,2" Width="{Binding ElementName=PasswordBox, Path=ActualWidth}" FontSize="20" HorizontalAlignment="Right"
+                <TextBox Margin="0,2" Width="{Binding ElementName=PasswordBox, Path=ActualWidth}" FontSize="18" HorizontalAlignment="Right"
                          Grid.Column="1" />
             </Grid>
             <Grid Margin="0,10,0,0">
@@ -24,9 +24,9 @@
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition />
                 </Grid.ColumnDefinitions>
-                <TextBlock Name="TbPassword" TextAlignment="Right" Text="Password:" FontFamily="Roboto" FontSize="20" FontWeight="Thin" Foreground="Black"
+                <TextBlock Margin="0,0,5,0" Name="TbPassword" TextAlignment="Right" Text="Password:" FontFamily="Roboto" FontSize="20" FontWeight="Thin" Foreground="Black"
                        HorizontalAlignment="Center" VerticalAlignment="Center" Width="101" />
-                <PasswordBox FontSize="20" Margin="0,2" Name="PasswordBox" Grid.Column="1" />
+                <PasswordBox FontSize="18" Margin="0,2" Name="PasswordBox" Grid.Column="1" />
             </Grid>
         </StackPanel>
 
