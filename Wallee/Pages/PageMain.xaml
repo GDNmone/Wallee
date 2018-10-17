@@ -21,7 +21,7 @@
     </Hyperlink>
         </TextBlock>
         <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" FontFamily="Roboto Lt" FontSize="14" Grid.Column="2">           
-    <Hyperlink FontSize="20" TextDecorations="{x:Null}" FontWeight="Thin" Foreground="Black">
+    <Hyperlink NavigateUri="PageMorePhoto.xaml" FontSize="20" TextDecorations="{x:Null}" FontWeight="Thin" Foreground="Black">
         Skip
     </Hyperlink>
         </TextBlock>
