@@ -3,13 +3,13 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Windows;
 
-namespace Unsplasharp.Models {
+namespace Unsplasharp.Models
+{
     /// <summary>
     /// Represents a photo class from Unsplash API.
     /// </summary>
-    public class Photo : INotifyPropertyChanged {
-
-
+    public class Photo : INotifyPropertyChanged
+    {
         #region Property Margin(Thickness)
 
         private Thickness _Margin;
@@ -26,8 +26,29 @@ namespace Unsplasharp.Models {
 
         #endregion
 
+        public double ActualHeight
+        {
+            get => _actualHeight;
+            set
+            {
+                _actualHeight = value;
+                _actualWidth = (double) Height / (double) Width * value;
+            }
+        }
+
+        public double ActualWidth
+        {
+            get => _actualWidth;
+            set
+            {
+                _actualWidth = value;
+                _actualHeight = (double) Height / (double) Width * value;
+            }
+        }
+
 
         #region simple properties
+
         /// <summary>
         /// Photo's unique identifier composed of Unicode characters.
         /// </summary>
@@ -44,15 +65,17 @@ namespace Unsplasharp.Models {
         public string CreatedAt { get; set; }
 
         private string _UpdatedAt;
+
         /// <summary>
         /// Date indicating the last time the photo has been updated.
         /// </summary>
-        public string UpdatedAt {
-            get {
-                return _UpdatedAt;
-            }
-            set {
-                if (_UpdatedAt != value) {
+        public string UpdatedAt
+        {
+            get { return _UpdatedAt; }
+            set
+            {
+                if (_UpdatedAt != value)
+                {
                     _UpdatedAt = value;
                     NotifyPropertyChanged(nameof(UpdatedAt));
                 }
@@ -79,10 +102,13 @@ namespace Unsplasharp.Models {
         /// <summary>
         /// Downloads count since the photo was created.
         /// </summary>
-        public int Downloads {
+        public int Downloads
+        {
             get { return _Downloads; }
-            set {
-                if (_Downloads != value) {
+            set
+            {
+                if (_Downloads != value)
+                {
                     _Downloads = value;
                     NotifyPropertyChanged(nameof(Downloads));
                 }
@@ -94,12 +120,13 @@ namespace Unsplasharp.Models {
         /// <summary>
         /// Likes count since the photo was created.
         /// </summary>
-        public int Likes {
-            get {
-                return _Likes;
-            }
-            set {
-                if (_Likes != value) {
+        public int Likes
+        {
+            get { return _Likes; }
+            set
+            {
+                if (_Likes != value)
+                {
                     _Likes = value;
                     NotifyPropertyChanged(nameof(Likes));
                 }
@@ -107,13 +134,17 @@ namespace Unsplasharp.Models {
         }
 
         private bool _IsLikedByUser;
+
         /// <summary>
         /// Whether the photo has been liked by the current user if a user is logged.
         /// </summary>
-        public bool IsLikedByUser {
+        public bool IsLikedByUser
+        {
             get { return _IsLikedByUser; }
-            set {
-                if (_IsLikedByUser != value) {
+            set
+            {
+                if (_IsLikedByUser != value)
+                {
                     _IsLikedByUser = value;
                     NotifyPropertyChanged(nameof(IsLikedByUser));
                 }
@@ -125,21 +156,23 @@ namespace Unsplasharp.Models {
         #region composed properties
 
         private List<Collection> _CurrentUserCollection;
+
         /// <summary>
         /// The photo's collection where the photo is included, if any.
         /// </summary>
-        public List<Collection> CurrentUserCollection {
-            get {
-                return _CurrentUserCollection;
-            }
-            set {
-                if (_CurrentUserCollection != value) {
+        public List<Collection> CurrentUserCollection
+        {
+            get { return _CurrentUserCollection; }
+            set
+            {
+                if (_CurrentUserCollection != value)
+                {
                     _CurrentUserCollection = value;
                     NotifyPropertyChanged(nameof(CurrentUserCollection));
                 }
             }
         }
-    
+
 
         /// <summary>
         /// Absolute photo's URLs (for different photo's sizes).
@@ -147,15 +180,17 @@ namespace Unsplasharp.Models {
         public Urls Urls { get; set; }
 
         private List<Category> _Categories;
+
         /// <summary>
         /// Photo's matched categories.
         /// </summary>
-        public List<Category> Categories {
-            get {
-                return _Categories;
-            }
-            set {
-                if (_Categories != value) {
+        public List<Category> Categories
+        {
+            get { return _Categories; }
+            set
+            {
+                if (_Categories != value)
+                {
                     _Categories = value;
                     NotifyPropertyChanged(nameof(Categories));
                 }
@@ -168,15 +203,17 @@ namespace Unsplasharp.Models {
         public User User { get; set; }
 
         private Exif _Exif;
+
         /// <summary>
         /// Camera specifications.
         /// </summary>
-        public Exif Exif {
-            get {
-                return _Exif;
-            }
-            set {
-                if (_Exif != value) {
+        public Exif Exif
+        {
+            get { return _Exif; }
+            set
+            {
+                if (_Exif != value)
+                {
                     _Exif = value;
                     NotifyPropertyChanged(nameof(Exif));
                 }
@@ -184,13 +221,19 @@ namespace Unsplasharp.Models {
         }
 
         private Location _Location;
+        private double _actualHeight;
+        private double _actualWidth;
+
         /// <summary>
         /// Where the photo has been shot.
         /// </summary>
-        public Location Location {
+        public Location Location
+        {
             get { return _Location; }
-            set {
-                if (_Location != value) {
+            set
+            {
+                if (_Location != value)
+                {
                     _Location = value;
                     NotifyPropertyChanged(nameof(Location));
                 }
@@ -205,14 +248,17 @@ namespace Unsplasharp.Models {
         #endregion composed properties
 
         #region events
+
         /// <summary>
         /// Event raised when a property is modified
         /// </summary>
         public event PropertyChangedEventHandler PropertyChanged;
 
-        private void NotifyPropertyChanged(String propertyName) {
+        private void NotifyPropertyChanged(String propertyName)
+        {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
+
         #endregion events
     }
 
@@ -220,7 +266,8 @@ namespace Unsplasharp.Models {
     /// <summary>
     /// Photo's link relations.
     /// </summary>
-    public class PhotoLinks {
+    public class PhotoLinks
+    {
         /// <summary>
         /// API location of this photo.
         /// </summary>
@@ -245,7 +292,8 @@ namespace Unsplasharp.Models {
     /// <summary>
     /// Camera specifications.
     /// </summary>
-    public class Exif {
+    public class Exif
+    {
         /// <summary>
         /// Camera’s brand.
         /// </summary>
@@ -280,13 +328,15 @@ namespace Unsplasharp.Models {
     /// <summary>
     /// The photo's location.
     /// </summary>
-    public class Location {
+    public class Location
+    {
         private string _Title;
 
         /// <summary>
         /// Full location's name (district + city + country (if available))
         /// </summary>
-        public string Title {
+        public string Title
+        {
             get { return _Title; }
             set { _Title = value; }
         }
@@ -296,7 +346,8 @@ namespace Unsplasharp.Models {
         /// <summary>
         /// Location's name
         /// </summary>
-        public string Name {
+        public string Name
+        {
             get { return _Name; }
             set { _Name = value; }
         }
@@ -306,7 +357,8 @@ namespace Unsplasharp.Models {
         /// <summary>
         /// Location’s city.
         /// </summary>
-        public string City {
+        public string City
+        {
             get { return _City; }
             set { _City = value; }
         }
@@ -316,17 +368,19 @@ namespace Unsplasharp.Models {
         /// <summary>
         /// Location’s country.
         /// </summary>
-        public string Country {
+        public string Country
+        {
             get { return _Country; }
             set { _Country = value; }
-        }        
+        }
 
         private Position _Position;
 
         /// <summary>
         /// Location’s position (latitude, longitude).
         /// </summary>
-        public Position Position {
+        public Position Position
+        {
             get { return _Position; }
             set { _Position = value; }
         }
@@ -335,13 +389,15 @@ namespace Unsplasharp.Models {
     /// <summary>
     /// Represents a geographical position (latitude, longitude).
     /// </summary>
-    public class Position {
+    public class Position
+    {
         private int _Latitude;
 
         /// <summary>
         /// Geographical latitude.
         /// </summary>
-        public int Latitude {
+        public int Latitude
+        {
             get { return _Latitude; }
             set { _Latitude = value; }
         }
@@ -351,17 +407,18 @@ namespace Unsplasharp.Models {
         /// <summary>
         /// Geographical longitude.
         /// </summary>
-        public int Longitude {
+        public int Longitude
+        {
             get { return _Longitude; }
             set { _Longitude = value; }
         }
-
     }
 
     /// <summary>
     /// Photo's URLs linking to the direct photo (full screen).
     /// </summary>
-    public class Urls {
+    public class Urls
+    {
         /// <summary>
         /// URL linking to the photo in native resolution and uncompressed.
         /// </summary>
@@ -396,7 +453,8 @@ namespace Unsplasharp.Models {
     /// <summary>
     /// Photo's category.
     /// </summary>
-    public class Category {
+    public class Category
+    {
         /// <summary>
         /// Category's identifier.
         /// </summary>
@@ -421,7 +479,8 @@ namespace Unsplasharp.Models {
     /// <summary>
     /// Photo's link to its categories.
     /// </summary>
-    public class CategoryLinks {
+    public class CategoryLinks
+    {
         /// <summary>
         /// Link of this category.
         /// </summary>
@@ -431,7 +490,5 @@ namespace Unsplasharp.Models {
         /// Link to all photos in this category.
         /// </summary>
         public string Photos { get; set; }
-
     }
 }
-

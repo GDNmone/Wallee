@@ -30,6 +30,7 @@ namespace Wallee.Utils
 
             foreach (var t in photosFound)
             {
+                t.ActualWidth = 250d;
                 MinimunHeight().Add(t);
             }
 
@@ -41,7 +42,8 @@ namespace Wallee.Utils
             {
                 if (list != MaxList)
                 {
-                    var added = (((double)MaxHeightValue) - (HeightList(list)) / (double)(list.Count - 1));
+                    var height = HeightList(list);
+                    var added = (((double)MaxHeightValue) - (height)) / (double)(list.Count );
                     list.ToList().ForEach(photo => photo.Margin = new Thickness() {Bottom = added});
                 }
             }
@@ -65,7 +67,7 @@ namespace Wallee.Utils
 
         private static double HeightList(ObservableCollection<Photo> list)
         {
-            var t = list.Count == 0 ? 0 : list.Sum(photo => ((double)photo.Height / (double)photo.Width) * 250d);
+            var t = list.Count == 0 ? 0 : list.Sum(photo => (photo.ActualHeight));
             return t ;
         }
 
