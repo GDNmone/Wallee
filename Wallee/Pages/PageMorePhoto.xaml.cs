@@ -1,9 +1,11 @@
-﻿using System.Collections.ObjectModel;
+﻿using System;
 using System.ComponentModel;
+using System.Diagnostics;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using Unsplasharp;
-using Unsplasharp.Models;
+using System.Windows.Input;
+using MaterialDesignColors;
 using Wallee.Utils;
 
 namespace Wallee.Pages
@@ -11,10 +13,14 @@ namespace Wallee.Pages
     /// <summary>
     /// Логика взаимодействия для PageMorePhoto.xaml
     /// </summary>
-    public partial class PageMorePhoto : Page, INotifyPropertyChanged
+    public partial class PageMorePhoto : UserControl, INotifyPropertyChanged
     {
+        public AsyncCommand SearchCommand { get; }
+
         public PageMorePhoto()
         {
+            //SearchCommand = new AsyncCommand(ButtonBase_OnClickUpdata);
+
             InitializeComponent();
         }
 
@@ -36,13 +42,20 @@ namespace Wallee.Pages
 
         private int countPage = 1;
         private string lastQuery = ";";
-        private void ButtonBase_OnClickUpdata(object sender, RoutedEventArgs e)
+
+        private async void ButtonSearch_OnClick(object sender, RoutedEventArgs e)
         {
-            if (lastQuery == TextSerch)return;
+            Console.WriteLine("Clock");
+
+            if (lastQuery == TextSerch) return;
             lastQuery = TextSerch;
             countPage = 1;
             ServiceUnsplash.Reset();
-            ServiceUnsplash.GetPhoto(countPage, TextSerch);
+
+            Console.WriteLine("do");
+            await ServiceUnsplash.GetPhoto(countPage, TextSerch, this.Dispatcher);
+
+            Console.WriteLine("completed");
         }
 
         #region System
@@ -56,10 +69,16 @@ namespace Wallee.Pages
 
         #endregion
 
-        private void ButtonBase_OnClick(object sender, RoutedEventArgs e)
+        private async void ButtonBase_OnClick(object sender, RoutedEventArgs e)
         {
             countPage++;
-            ServiceUnsplash.GetPhoto(countPage, TextSerch);
+            await ServiceUnsplash.GetPhoto(countPage, TextSerch, this.Dispatcher);
         }
+
+        
+    }
+
+    public static class CommandPageMorePhoto
+    {
     }
 }

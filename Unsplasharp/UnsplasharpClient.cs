@@ -1,17 +1,22 @@
-﻿using Newtonsoft.Json.Linq;
+﻿using System;
+using Newtonsoft.Json.Linq;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using Unsplasharp.Models;
 using System.Linq;
 
-namespace Unsplasharp {
+namespace Unsplasharp
+{
     /// <summary>
     /// Represents a Unsplasharp class which can be used to communicate with Unplash APIs.
     /// </summary>
-    public class UnsplasharpClient {
+    public class UnsplasharpClient
+    {
         #region variables
+
         /// <summary>
         /// API Key 
         /// </summary>
@@ -27,26 +32,26 @@ namespace Unsplasharp {
         /// <summary>
         /// Unplash base URI: "https://api.unsplash.com/"
         /// </summary>
-        private static string URIBase {
-            get {
-                return "https://api.unsplash.com/";
-            }
+        private static string URIBase
+        {
+            get { return "https://api.unsplash.com/"; }
         }
 
         /// <summary>
         /// Unplash endpoints
         /// </summary>
-        private static IDictionary<string, string> URIEndpoints = new Dictionary<string, string>() {
-            {"photos", "photos" },
-            {"curated_photos", "photos/curated" },
-            {"search", "search" },
-            {"users", "users" },
-            {"collections", "collections" },
-            {"search_photos", "search/photos" },
-            {"search_collections", "search/collections" },
-            {"search_users", "search/users" },
-            {"total_stats", "stats/total" },
-            {"monthly_stats", "stats/month" }
+        private static IDictionary<string, string> URIEndpoints = new Dictionary<string, string>()
+        {
+            {"photos", "photos"},
+            {"curated_photos", "photos/curated"},
+            {"search", "search"},
+            {"users", "users"},
+            {"collections", "collections"},
+            {"search_photos", "search/photos"},
+            {"search_collections", "search/collections"},
+            {"search_users", "search/users"},
+            {"total_stats", "stats/total"},
+            {"monthly_stats", "stats/month"}
         };
 
         /// <summary>
@@ -66,7 +71,7 @@ namespace Unsplasharp {
         /// <summary>
         /// Last photo search query
         /// </summary>
-        public string LastPhotosSearchQuery { get; set; }
+        // public string LastPhotosSearchQuery { get; set; }
 
         /// <summary>
         /// Total pages of last search photos query
@@ -119,7 +124,8 @@ namespace Unsplasharp {
         /// <summary>
         /// How to sort the data.
         /// </summary>
-        public enum OrderBy {
+        public enum OrderBy
+        {
             /// <summary>
             /// Sort the data from the most recent to the oldest.
             /// </summary>
@@ -139,7 +145,8 @@ namespace Unsplasharp {
         /// <summary>
         /// Photo orientation.
         /// </summary>
-        public enum Orientation {
+        public enum Orientation
+        {
             /// <summary>
             /// Landscape orientation.
             /// </summary>
@@ -159,7 +166,8 @@ namespace Unsplasharp {
         /// <summary>
         /// The frequency of the stats.
         /// </summary>
-        public enum Resolution {
+        public enum Resolution
+        {
             /// <summary>
             /// Stats for each day.
             /// </summary>
@@ -173,7 +181,8 @@ namespace Unsplasharp {
         /// </summary>
         /// <param name="applicationId">A string to identify the current application performing a request.</param>
         /// <param name="secret">A string representing an API secret key to make HTTP authentified calls to Unplash services.</param>
-        public UnsplasharpClient(string applicationId, string secret = "") {
+        public UnsplasharpClient(string applicationId, string secret = "")
+        {
             ApplicationId = applicationId;
             Secret = secret;
         }
@@ -192,11 +201,19 @@ namespace Unsplasharp {
         /// <param name="width">Desired width.</param>
         /// <param name="height">Desired height.</param>
         /// <returns>A new Photo class instance.</returns>
-        public async Task<Photo> GetPhoto(string id, int width = 0, int height = 0) {
+        public async Task<Photo> GetPhoto(string id, int width = 0, int height = 0)
+        {
             var url = string.Format("{0}/{1}", GetUrl("photos"), id);
 
-            if (width != 0) { url = AddQueryString(url, "w", width); }
-            if (height != 0) { url = AddQueryString(url, "h", height); }
+            if (width != 0)
+            {
+                url = AddQueryString(url, "w", width);
+            }
+
+            if (height != 0)
+            {
+                url = AddQueryString(url, "h", height);
+            }
 
             return await FetchPhoto(url);
         }
@@ -213,9 +230,11 @@ namespace Unsplasharp {
         /// <param name="rectWidth">Width of the cropped rectangle.</param>
         /// <param name="rectHeight">Height of the cropped rectangle.</param>
         /// <returns>A new Photo class instance which has a custom URL.</returns>
-        public async Task<Photo> GetPhoto(string id, int width, int height, int rectX, int rectY, int rectWidth, int rectHeight) {
-            var url = string.Format("{0}/{1}?w={2}&h={3}&rect={4},{5},{6},{7}", 
-                                    GetUrl("photos"), id, width, height, rectX, rectY, rectWidth, rectHeight);
+        public async Task<Photo> GetPhoto(string id, int width, int height, int rectX, int rectY, int rectWidth,
+            int rectHeight)
+        {
+            var url = string.Format("{0}/{1}?w={2}&h={3}&rect={4},{5},{6},{7}",
+                GetUrl("photos"), id, width, height, rectX, rectY, rectWidth, rectHeight);
 
             return await FetchPhoto(url);
         }
@@ -224,7 +243,8 @@ namespace Unsplasharp {
         /// Retrieve a single random photo.
         /// </summary>
         /// <returns>A new Photo class instance.</returns>
-        public async Task<Photo> GetRandomPhoto() {
+        public async Task<Photo> GetRandomPhoto()
+        {
             var url = string.Format("{0}/random", GetUrl("photos"));
             return await FetchPhoto(url);
         }
@@ -234,7 +254,8 @@ namespace Unsplasharp {
         /// </summary>
         /// <param name="collectionId">Public collection ID to filter selection.</param>
         /// <returns>A new Photo class instance.</returns>
-        public async Task<Photo> GetRandomPhoto(string collectionId) {
+        public async Task<Photo> GetRandomPhoto(string collectionId)
+        {
             var url = string.Format("{0}/random?collections={1}", GetUrl("photos"), collectionId);
             return await FetchPhoto(url);
         }
@@ -244,8 +265,9 @@ namespace Unsplasharp {
         /// </summary>
         /// <param name="collectionIds">Public collection ID(‘s) to filter selection.</param>
         /// <returns>A new Photo class instance.</returns>
-        public async Task<Photo> GetRandomPhoto(string[] collectionIds) {
-            var url = string.Format("{0}/random?collections={1}", 
+        public async Task<Photo> GetRandomPhoto(string[] collectionIds)
+        {
+            var url = string.Format("{0}/random?collections={1}",
                 GetUrl("photos"), string.Join(",", collectionIds));
 
             return await FetchPhoto(url);
@@ -260,16 +282,31 @@ namespace Unsplasharp {
         /// <param name="width">Image width in pixels.</param>
         /// <param name="height">Image height in pixels.</param>
         /// <returns>A list of random photos.</returns>
-        public async Task<List<Photo>> GetRandomPhoto(int count, string username = "", 
-            string query = "", int width = 0, int height = 0) {
+        public async Task<List<Photo>> GetRandomPhoto(int count, string username = "",
+            string query = "", int width = 0, int height = 0)
+        {
+            var url = string.Format("{0}/random?count={1}",
+                GetUrl("photos"), count);
 
-            var url = string.Format("{0}/random?count={1}", 
-                                    GetUrl("photos"), count);
+            if (StringNotNull(username))
+            {
+                url += string.Format("&username={0}", username);
+            }
 
-            if (StringNotNull(username)) { url += string.Format("&username={0}", username); }
-            if (StringNotNull(query)) { url += string.Format("&query={0}", query); }
-            if (width != 0) { url += string.Format("&w={0}", width); }
-            if (height != 0) { url += string.Format("&h={0}", height); }
+            if (StringNotNull(query))
+            {
+                url += string.Format("&query={0}", query);
+            }
+
+            if (width != 0)
+            {
+                url += string.Format("&w={0}", width);
+            }
+
+            if (height != 0)
+            {
+                url += string.Format("&h={0}", height);
+            }
 
             return await FetchPhotosList(url);
         }
@@ -285,17 +322,32 @@ namespace Unsplasharp {
         /// <param name="count">The number of photos to return. (Default: 1; max: 30)</param>
         /// <returns>A list of random photos.</returns>
         public async Task<List<Photo>> GetRandomPhoto(Orientation orientation,
-            string username = "", string query = "", int width = 0, int height = 0, int count = 1) {
-
+            string username = "", string query = "", int width = 0, int height = 0, int count = 1)
+        {
             var _orientation = ConvertOrientation(orientation);
 
             var url = string.Format("{0}/random?count={1}&orientation={2}",
-                                    GetUrl("photos"), count, _orientation);
+                GetUrl("photos"), count, _orientation);
 
-            if (StringNotNull(username)) { url += string.Format("&username={0}", username); }
-            if (StringNotNull(query)) { url += string.Format("&query={0}", query); }
-            if (width != 0) { url += string.Format("&w={0}", width); }
-            if (height != 0) { url += string.Format("&h={0}", height); }
+            if (StringNotNull(username))
+            {
+                url += string.Format("&username={0}", username);
+            }
+
+            if (StringNotNull(query))
+            {
+                url += string.Format("&query={0}", query);
+            }
+
+            if (width != 0)
+            {
+                url += string.Format("&w={0}", width);
+            }
+
+            if (height != 0)
+            {
+                url += string.Format("&h={0}", height);
+            }
 
             return await FetchPhotosList(url);
         }
@@ -311,15 +363,30 @@ namespace Unsplasharp {
         /// <param name="count">The number of photos to return. (Default: 1; max: 30)</param>
         /// <returns>A list of random photos.</returns>
         public async Task<List<Photo>> GetRandomPhoto(bool featured,
-            string username = "", string query = "", int width = 0, int height = 0, int count = 1) {
-
+            string username = "", string query = "", int width = 0, int height = 0, int count = 1)
+        {
             var url = string.Format("{0}/random?count={1}&featured={2}",
-                                    GetUrl("photos"), count, featured);
+                GetUrl("photos"), count, featured);
 
-            if (StringNotNull(username)) { url += string.Format("&username={0}", username); }
-            if (StringNotNull(query)) { url += string.Format("&query={0}", query); }
-            if (width != 0) { url += string.Format("&w={0}", width); }
-            if (height != 0) { url += string.Format("&h={0}", height); }
+            if (StringNotNull(username))
+            {
+                url += string.Format("&username={0}", username);
+            }
+
+            if (StringNotNull(query))
+            {
+                url += string.Format("&query={0}", query);
+            }
+
+            if (width != 0)
+            {
+                url += string.Format("&w={0}", width);
+            }
+
+            if (height != 0)
+            {
+                url += string.Format("&h={0}", height);
+            }
 
             return await FetchPhotosList(url);
         }
@@ -336,17 +403,32 @@ namespace Unsplasharp {
         /// <param name="count">The number of photos to return. (Default: 1; max: 30)</param>
         /// <returns>A list of random photos.</returns>
         public async Task<List<Photo>> GetRandomPhoto(Orientation orientation, bool featured,
-            string username = "", string query = "", int width = 0, int height = 0, int count = 1) {
-
+            string username = "", string query = "", int width = 0, int height = 0, int count = 1)
+        {
             var _orientation = ConvertOrientation(orientation);
 
-            var url = string.Format("{0}/random?orientation={1}&featured={2}&count={3}", 
-                                    GetUrl("photos"), _orientation, featured, count);
+            var url = string.Format("{0}/random?orientation={1}&featured={2}&count={3}",
+                GetUrl("photos"), _orientation, featured, count);
 
-            if (StringNotNull(username)) { url += string.Format("&username={0}", username); }
-            if (StringNotNull(query)) { url += string.Format("&query={0}", query); }
-            if (width != 0) { url += string.Format("&w={0}", width); }
-            if (height != 0) { url += string.Format("&h={0}", height); }
+            if (StringNotNull(username))
+            {
+                url += string.Format("&username={0}", username);
+            }
+
+            if (StringNotNull(query))
+            {
+                url += string.Format("&query={0}", query);
+            }
+
+            if (width != 0)
+            {
+                url += string.Format("&w={0}", width);
+            }
+
+            if (height != 0)
+            {
+                url += string.Format("&h={0}", height);
+            }
 
             return await FetchPhotosList(url);
         }
@@ -361,32 +443,40 @@ namespace Unsplasharp {
         /// <param name="resolution">The frequency of the stats.</param>
         /// <param name="quantity">The amount of for each stat.</param>
         /// <returns></returns>
-        public async Task<PhotoStats> GetPhotoStats(string id, Resolution resolution = Resolution.Days, int quantity = 30) {
+        public async Task<PhotoStats> GetPhotoStats(string id, Resolution resolution = Resolution.Days,
+            int quantity = 30)
+        {
             var url = string.Format(
-                "{0}/{1}/statistics?resolution={2}&quantity={3}", 
+                "{0}/{1}/statistics?resolution={2}&quantity={3}",
                 GetUrl("photos"), id, ConvertResolution(resolution), quantity);
 
-            try {
+            try
+            {
                 string responseBodyAsText = await Fetch(url);
                 var data = JObject.Parse(responseBodyAsText);
 
-                return new PhotoStats() {
-                    Id = (string)data["id"],
-                    Downloads = new StatsData() {
-                        Total = int.Parse((string)data["downloads"]["total"]),
+                return new PhotoStats()
+                {
+                    Id = (string) data["id"],
+                    Downloads = new StatsData()
+                    {
+                        Total = int.Parse((string) data["downloads"]["total"]),
                         Historical = ExtractHistorical(data["downloads"])
                     },
-                    Views = new StatsData() {
-                        Total = int.Parse((string)data["views"]["total"]),
+                    Views = new StatsData()
+                    {
+                        Total = int.Parse((string) data["views"]["total"]),
                         Historical = ExtractHistorical(data["views"])
                     },
-                    Likes = new StatsData() {
-                        Total = int.Parse((string)data["likes"]["total"]),
+                    Likes = new StatsData()
+                    {
+                        Total = int.Parse((string) data["likes"]["total"]),
                         Historical = ExtractHistorical(data["likes"])
                     }
                 };
-
-            } catch {
+            }
+            catch
+            {
                 return null;
             }
         }
@@ -398,14 +488,15 @@ namespace Unsplasharp {
         /// </summary>
         /// <param name="id">The photo’s ID.</param>
         /// <returns>The photo's download link</returns>
-        public async Task<string> GetPhotoDownloadLink(string id) {
+        public async Task<string> GetPhotoDownloadLink(string id)
+        {
             var url = string.Format("{0}/{1}/download", GetUrl("photos"), id);
             var response = await Fetch(url);
 
             if (response == null) return null;
             var data = JObject.Parse(response);
 
-            return (string)data["url"];
+            return (string) data["url"];
         }
 
         /// <summary>
@@ -415,9 +506,10 @@ namespace Unsplasharp {
         /// <param name="perPage">Number of items per page.</param>
         /// <param name="orderBy">How to sort the photos.</param>
         /// <returns>List of all  photos.</returns>
-        public async Task<List<Photo>> ListPhotos(int page = 1, int perPage = 10, OrderBy orderBy = OrderBy.Latest) {
+        public async Task<List<Photo>> ListPhotos(int page = 1, int perPage = 10, OrderBy orderBy = OrderBy.Latest)
+        {
             var url = string.Format(
-                "{0}?page={1}&per_page={2}&order_by={3}", 
+                "{0}?page={1}&per_page={2}&order_by={3}",
                 GetUrl("photos"), page, perPage, ConvertOderBy(orderBy));
 
             return await FetchPhotosList(url);
@@ -430,9 +522,11 @@ namespace Unsplasharp {
         /// // <param name="perPage">Number of items per page.</param>
         /// <param name="orderBy">How to sort the photos.</param>
         /// <returns>List of curated photos.</returns>
-        public async Task<List<Photo>> ListCuratedPhotos(int page = 1, int perPage = 10, OrderBy orderBy = OrderBy.Latest) {
+        public async Task<List<Photo>> ListCuratedPhotos(int page = 1, int perPage = 10,
+            OrderBy orderBy = OrderBy.Latest)
+        {
             var url = string.Format(
-                "{0}?page={1}&per_page={2}&order_by={3}", 
+                "{0}?page={1}&per_page={2}&order_by={3}",
                 GetUrl("curated_photos"), page, perPage, ConvertOderBy(orderBy));
 
             return await FetchPhotosList(url);
@@ -443,21 +537,25 @@ namespace Unsplasharp {
         /// </summary>
         /// <param name="url">API endpoint to fetch the photos' list.</param>
         /// <returns>A list of photos.</returns>
-        public async Task<List<Photo>> FetchPhotosList(string url) {
+        public async Task<List<Photo>> FetchPhotosList(string url)
+        {
             var listPhotos = new List<Photo>();
 
-            try {
+            try
+            {
                 var responseBodyAsText = await Fetch(url);
                 var data = JArray.Parse(responseBodyAsText);
 
-                foreach (JObject rawPhoto in data) {
+                foreach (JObject rawPhoto in data)
+                {
                     var photo = ExtractPhoto(rawPhoto);
                     listPhotos.Add(photo);
                 }
 
                 return listPhotos;
-
-            } catch /*(HttpRequestException hre)*/ {
+            }
+            catch /*(HttpRequestException hre)*/
+            {
                 return listPhotos;
             }
         }
@@ -467,7 +565,8 @@ namespace Unsplasharp {
         /// </summary>
         /// <param name="url">URL to fetch photo from.</param>
         /// <returns>A single photo instance.</returns>
-        public async Task<Photo> FetchPhoto(string url) {
+        public async Task<Photo> FetchPhoto(string url)
+        {
             var response = await Fetch(url);
 
             if (response == null) return null;
@@ -480,26 +579,31 @@ namespace Unsplasharp {
         #endregion photos
 
         #region collections
+
         /// <summary>
         /// Returns a list of collections (of photos) from a specified URL
         /// </summary>
         /// <param name="url">API endpoint where to fetch the photos' list.</param>
         /// <returns>Collections list</returns>
-        public async Task<List<Collection>> FetchCollectionsList(string url) {
+        public async Task<List<Collection>> FetchCollectionsList(string url)
+        {
             var listCollection = new List<Collection>();
 
-            try {
+            try
+            {
                 var responseBodyAsText = await Fetch(url);
                 var jsonList = JArray.Parse(responseBodyAsText);
 
-                foreach (JObject item in jsonList) {
+                foreach (JObject item in jsonList)
+                {
                     var collection = ExtractCollection(item);
                     listCollection.Add(collection);
                 }
 
                 return listCollection;
-
-            } catch /*(HttpRequestException hre)*/ {
+            }
+            catch /*(HttpRequestException hre)*/
+            {
                 return listCollection;
             }
         }
@@ -509,7 +613,8 @@ namespace Unsplasharp {
         /// </summary>
         /// <param name="id">Collection's id to find.</param>
         /// <returns>A new collection instance.</returns>
-        public async Task<Collection> GetCollection(string id) {
+        public async Task<Collection> GetCollection(string id)
+        {
             var url = string.Format("{0}/{1}", GetUrl("collections"), id);
             var response = await Fetch(url);
 
@@ -526,7 +631,8 @@ namespace Unsplasharp {
         /// <param name="page">Page number to retrieve.</param>
         /// <param name="perPage">Number of items per page. (Max: 30)</param>
         /// <returns>A list of photos in the collection</returns>
-        public async Task<List<Photo>> GetCollectionPhotos(string id, int page = 1, int perPage = 10) {
+        public async Task<List<Photo>> GetCollectionPhotos(string id, int page = 1, int perPage = 10)
+        {
             var url = string.Format(
                 "{0}/{1}/photos?page={2}&per_page={3}",
                 GetUrl("collections"), id, page, perPage);
@@ -540,9 +646,10 @@ namespace Unsplasharp {
         /// <param name="page">Page number to retrieve.</param>
         /// <param name="perPage">Number of items per page. (Max: 30)</param>
         /// <returns>List of recent collections</returns>
-        public async Task<List<Collection>> ListCollections(int page = 1, int perPage = 10) {
+        public async Task<List<Collection>> ListCollections(int page = 1, int perPage = 10)
+        {
             var url = string.Format(
-                "{0}?page={1}&per_page={2}", 
+                "{0}?page={1}&per_page={2}",
                 GetUrl("collections"), page, perPage);
 
             return await FetchCollectionsList(url);
@@ -554,9 +661,10 @@ namespace Unsplasharp {
         /// <param name="page">Page number to retrieve.</param>
         /// <param name="perPage">Number of items per page. (Max: 30)</param>
         /// <returns>A list of collections.</returns>
-        public async Task<List<Collection>> ListFeaturedCollections(int page = 1, int perPage = 10) {
+        public async Task<List<Collection>> ListFeaturedCollections(int page = 1, int perPage = 10)
+        {
             var url = string.Format(
-                "{0}/featured?page={1}&per_page={2}", 
+                "{0}/featured?page={1}&per_page={2}",
                 GetUrl("collections"), page, perPage);
 
             return await FetchCollectionsList(url);
@@ -568,9 +676,10 @@ namespace Unsplasharp {
         /// <param name="page">Page number to retrieve.</param>
         /// <param name="perPage">Number of items per page. (Max: 30)</param>
         /// <returns>A list of collections.</returns>
-        public async Task<List<Collection>> ListCuratedCollections(int page = 1, int perPage = 10) {
+        public async Task<List<Collection>> ListCuratedCollections(int page = 1, int perPage = 10)
+        {
             var url = string.Format("" +
-                "{0}/curated?page={1}&per_page={2}", 
+                                    "{0}/curated?page={1}&per_page={2}",
                 GetUrl("collections"), page, perPage);
 
             return await FetchCollectionsList(url);
@@ -581,7 +690,8 @@ namespace Unsplasharp {
         /// </summary>
         /// <param name="id">The collection’s ID.</param>
         /// <returns>A list of collections.</returns>
-        public async Task<List<Collection>> ListRelatedCollections(string id) {
+        public async Task<List<Collection>> ListRelatedCollections(string id)
+        {
             var url = string.Format("{0}/{1}/related", GetUrl("collections"), id);
             return await FetchCollectionsList(url);
         }
@@ -589,6 +699,7 @@ namespace Unsplasharp {
         #endregion collections
 
         #region user
+
         /// <summary>
         /// Return the User corresponding to the given username.
         /// </summary>
@@ -596,11 +707,19 @@ namespace Unsplasharp {
         /// <param name="width">Profile image width in pixels.</param>
         /// <param name="height">Profile image height in pixels.</param>
         /// <returns>User corresponding to the username if found.</returns>
-        public async Task<User> GetUser(string username, int width = 0, int height = 0) {
+        public async Task<User> GetUser(string username, int width = 0, int height = 0)
+        {
             var url = string.Format("{0}/{1}", GetUrl("users"), username);
 
-            if (width != 0) { url = AddQueryString(url, "w", width); }
-            if (height != 0) { url = AddQueryString(url, "w", height); }
+            if (width != 0)
+            {
+                url = AddQueryString(url, "w", width);
+            }
+
+            if (height != 0)
+            {
+                url = AddQueryString(url, "w", height);
+            }
 
             var response = await Fetch(url);
 
@@ -615,14 +734,15 @@ namespace Unsplasharp {
         /// </summary>
         /// <param name="username">User's name to get portfolio link from.</param>
         /// <returns>The user's porfolio link</returns>
-        public async Task<string> GetUserPorfolioLink(string username) {
+        public async Task<string> GetUserPorfolioLink(string username)
+        {
             var url = string.Format("{0}/{1}/portfolio", GetUrl("users"), username);
             var response = await Fetch(url);
 
             if (response == null) return null;
             var data = JObject.Parse(response);
 
-            return (string)data["url"];
+            return (string) data["url"];
         }
 
         /// <summary>
@@ -635,11 +755,11 @@ namespace Unsplasharp {
         /// <param name="stats">Show the stats for each user’s photo.</param>
         /// <param name="quantity">The amount of for each stat.</param>
         /// <returns>A list of user's photos.</returns>
-        public async Task<List<Photo>> ListUserPhotos(string username, int page = 1, int perPage = 10, 
-            OrderBy orderBy = OrderBy.Latest, bool stats = false, int quantity = 30) {
-
+        public async Task<List<Photo>> ListUserPhotos(string username, int page = 1, int perPage = 10,
+            OrderBy orderBy = OrderBy.Latest, bool stats = false, int quantity = 30)
+        {
             var url = string.Format(
-                "{0}/{1}/photos?page={2}&per_page={3}&order_by={4}&stats={5}&quantity={6}", 
+                "{0}/{1}/photos?page={2}&per_page={3}&order_by={4}&stats={5}&quantity={6}",
                 GetUrl("users"), username, page, perPage, ConvertOderBy(orderBy), stats, quantity);
 
             return await FetchPhotosList(url);
@@ -653,11 +773,11 @@ namespace Unsplasharp {
         /// <param name="perPage">Number of items per page.</param>
         /// <param name="orderBy">How to sort the photos.</param>
         /// <returns>A list of user's liked photos.</returns>
-        public async Task<List<Photo>> ListUserLikedPhotos(string username, int page = 1, 
-            int perPage = 10, OrderBy orderBy = OrderBy.Latest) {
-
+        public async Task<List<Photo>> ListUserLikedPhotos(string username, int page = 1,
+            int perPage = 10, OrderBy orderBy = OrderBy.Latest)
+        {
             var url = string.Format(
-                "{0}/{1}/likes?page={2}&per_page={3}&order_by={4}", 
+                "{0}/{1}/likes?page={2}&per_page={3}&order_by={4}",
                 GetUrl("users"), username, page, perPage, ConvertOderBy(orderBy));
 
             return await FetchPhotosList(url);
@@ -670,9 +790,10 @@ namespace Unsplasharp {
         /// <param name="page">Page number to retrieve.</param>
         /// <param name="perPage">Number of items per page.</param>
         /// <returns>List of user's collections</returns>
-        public async Task<List<Collection>> ListUserCollections(string username, int page = 1, int perPage = 10) {
+        public async Task<List<Collection>> ListUserCollections(string username, int page = 1, int perPage = 10)
+        {
             var url = string.Format(
-                "{0}/{1}/collections?page={2}&per_page={3}", 
+                "{0}/{1}/collections?page={2}&per_page={3}",
                 GetUrl("users"), username, page, perPage);
 
             return await FetchCollectionsList(url);
@@ -689,36 +810,42 @@ namespace Unsplasharp {
         /// <param name="quantity">The amount of for each stat. (Optional; default: 30)</param>
         /// <returns>User's statistics</returns>
         public async Task<UserStats> GetUserStats(
-            string username, 
-            Resolution resolution = Resolution.Days, 
-            int quantity = 30) {
-
-            var url = string.Format("{0}/{1}/statistics?resolution={2}&quantity={3}", 
+            string username,
+            Resolution resolution = Resolution.Days,
+            int quantity = 30)
+        {
+            var url = string.Format("{0}/{1}/statistics?resolution={2}&quantity={3}",
                 GetUrl("users"), username, ConvertResolution(resolution), quantity);
 
-            try {
+            try
+            {
                 string responseBodyAsText = await Fetch(url);
                 var data = JObject.Parse(responseBodyAsText);
 
-                return new UserStats() {
-                    Username = (string)data["username"],
-                    Downloads = new StatsData() {
-                        Total = int.Parse((string)data["downloads"]["total"]),
+                return new UserStats()
+                {
+                    Username = (string) data["username"],
+                    Downloads = new StatsData()
+                    {
+                        Total = int.Parse((string) data["downloads"]["total"]),
                         Historical = ExtractHistorical(data["downloads"])
                     },
-                    Views = new StatsData() {
-                        Total = int.Parse((string)data["views"]["total"]),
+                    Views = new StatsData()
+                    {
+                        Total = int.Parse((string) data["views"]["total"]),
                         Historical = ExtractHistorical(data["views"])
                     },
-                    Likes = new StatsData() {
-                        Total = int.Parse((string)data["likes"]["total"]),
+                    Likes = new StatsData()
+                    {
+                        Total = int.Parse((string) data["likes"]["total"]),
                         Historical = ExtractHistorical(data["likes"])
                     }
                 };
-
-            } catch {
+            }
+            catch
+            {
                 return null;
-            }            
+            }
         }
 
         #endregion user
@@ -732,12 +859,13 @@ namespace Unsplasharp {
         /// <param name="page">Page number to retrieve.</param>
         /// <param name="perPage">Number of items per page.</param>
         /// <returns>A list of photos found.</returns>
-        public async Task<List<Photo>> SearchPhotos(string query, int page = 1, int perPage = 10) {
+        public async Task<List<Photo>> SearchPhotos(string query, int page = 1, int perPage = 10)
+        {
             var url = string.Format(
                 "{0}?query={1}&page={2}&per_page={3}",
                 GetUrl("search_photos"), query, page, perPage);
 
-            LastPhotosSearchQuery = query;
+            // LastPhotosSearchQuery = query;
             return await FetchSearchPhotosList(url);
         }
 
@@ -749,12 +877,13 @@ namespace Unsplasharp {
         /// <param name="page">Page number to retrieve.</param>
         /// <param name="perPage">Number of items per page.</param>
         /// <returns>A list of photos found.</returns>
-        public async Task<List<Photo>> SearchPhotos(string query, string collectionId, int page = 1, int perPage = 10) {
+        public async Task<List<Photo>> SearchPhotos(string query, string collectionId, int page = 1, int perPage = 10)
+        {
             var url = string.Format(
                 "{0}?query={1}&page={2}&per_page={3}&collections={4}",
                 GetUrl("search_photos"), query, page, perPage, collectionId);
 
-            LastPhotosSearchQuery = query;
+            //  LastPhotosSearchQuery = query;
             return await FetchSearchPhotosList(url);
         }
 
@@ -766,12 +895,14 @@ namespace Unsplasharp {
         /// <param name="page">Page number to retrieve.</param>
         /// <param name="perPage">Number of items per page.</param>
         /// <returns>A list of photos found.</returns>
-        public async Task<List<Photo>> SearchPhotos(string query, string[] collectionIds, int page = 1, int perPage = 10) {
+        public async Task<List<Photo>> SearchPhotos(string query, string[] collectionIds, int page = 1,
+            int perPage = 10)
+        {
             var url = string.Format(
                 "{0}?query={1}&page={2}&per_page={3}&collections={4}",
                 GetUrl("search_photos"), query, page, perPage, string.Join(",", collectionIds));
 
-            LastPhotosSearchQuery = query;
+            //LastPhotosSearchQuery = query;
             return await FetchSearchPhotosList(url);
         }
 
@@ -782,7 +913,8 @@ namespace Unsplasharp {
         /// <param name="page">Page number to retrieve.</param>
         /// <param name="perPage">Number of items per page.</param>
         /// <returns>A list of collections found.</returns>
-        public async Task<List<Collection>> SearchCollections(string query, int page = 1, int perPage = 10) {
+        public async Task<List<Collection>> SearchCollections(string query, int page = 1, int perPage = 10)
+        {
             var url = string.Format(
                 "{0}?query={1}&page={2}&per_page={3}",
                 GetUrl("search_collections"), query, page, perPage);
@@ -798,7 +930,8 @@ namespace Unsplasharp {
         /// <param name="page">Page number to retrieve.</param>
         /// <param name="perPage">Number of items per page.</param>
         /// <returns>A list of users found.</returns>
-        public async Task<List<User>> SearchUsers(string query, int page = 1, int perPage = 10) {
+        public async Task<List<User>> SearchUsers(string query, int page = 1, int perPage = 10)
+        {
             var url = string.Format(
                 "{0}?query={1}&page={2}&per_page={3}",
                 GetUrl("search_users"), query, page, perPage);
@@ -812,28 +945,39 @@ namespace Unsplasharp {
         /// </summary>
         /// <param name="url">API endpoint to fetch the photos' list. Must be a search url.</param>
         /// <returns>A list of photos found.</returns>
-        public async Task<List<Photo>> FetchSearchPhotosList(string url) {
+        public async Task<List<Photo>> FetchSearchPhotosList(string url)
+        {
             var listPhotos = new List<Photo>();
-
-            try {
+            try
+            {
+                Stopwatch st = new Stopwatch();
+                st.Start();
                 var responseBodyAsText = await Fetch(url);
-                var data = JObject.Parse(responseBodyAsText);
-                var results = (JArray)data["results"];
 
-                LastPhotosSearchTotalResults = (int)data["total"];
-                LastPhotosSearchTotalPages = (int)data["total_pages"];
-
-                foreach (JObject item in results) {
-                    var photo = ExtractPhoto(item);
-                    listPhotos.Add(photo);
-                }
-
+                await Task.Run(() => t(responseBodyAsText));
+                Console.WriteLine("1/end/" + nameof(FetchSearchPhotosList) + '/' + st.ElapsedMilliseconds);
                 return listPhotos;
-
-            } catch /*(HttpRequestException hre)*/ {
+            }
+            catch (Exception hre)
+            {
                 LastPhotosSearchTotalResults = 0;
                 LastPhotosSearchTotalPages = 0;
                 return listPhotos;
+            }
+
+            void t(string responseBodyAsText)
+            {
+                var data = JObject.Parse(responseBodyAsText);
+                var results = (JArray) data["results"];
+
+                LastPhotosSearchTotalResults = (int) data["total"];
+                LastPhotosSearchTotalPages = (int) data["total_pages"];
+
+                foreach (JObject item in results)
+                {
+                    var photo = ExtractPhoto(item);
+                    listPhotos.Add(photo);
+                }
             }
         }
 
@@ -842,25 +986,29 @@ namespace Unsplasharp {
         /// </summary>
         /// <param name="url">API endpoint to fetch the collections' list. Must be a search url.</param>
         /// <returns>A list of collections found.</returns>
-        public async Task<List<Collection>> FetchSearcCollectionsList(string url) {
+        public async Task<List<Collection>> FetchSearcCollectionsList(string url)
+        {
             var listCollections = new List<Collection>();
 
-            try {
+            try
+            {
                 var responseBodyAsText = await Fetch(url);
                 var data = JObject.Parse(responseBodyAsText);
-                var results = (JArray)data["results"];
+                var results = (JArray) data["results"];
 
-                LastCollectionsSearchTotalResults = (int)data["total"];
-                LastCollectionsSearchTotalPages = (int)data["total_pages"];
+                LastCollectionsSearchTotalResults = (int) data["total"];
+                LastCollectionsSearchTotalPages = (int) data["total_pages"];
 
-                foreach (JObject item in results) {
+                foreach (JObject item in results)
+                {
                     var collection = ExtractCollection(item);
                     listCollections.Add(collection);
                 }
 
                 return listCollections;
-
-            } catch /*(HttpRequestException hre)*/ {
+            }
+            catch /*(HttpRequestException hre)*/
+            {
                 LastCollectionsSearchTotalResults = 0;
                 LastCollectionsSearchTotalPages = 0;
                 return listCollections;
@@ -872,56 +1020,64 @@ namespace Unsplasharp {
         /// </summary>
         /// <param name="url">API endpoint to fetch the users' list. Must be a search url.</param>
         /// <returns>A list of users found.</returns>
-        public async Task<List<User>> FetchSearcUsersList(string url) {
+        public async Task<List<User>> FetchSearcUsersList(string url)
+        {
             var listUsers = new List<User>();
 
-            try {
+            try
+            {
                 var responseBodyAsText = await Fetch(url);
                 var data = JObject.Parse(responseBodyAsText);
-                var results = (JArray)data["results"];
+                var results = (JArray) data["results"];
 
-                LastUsersSearchTotalResults = (int)data["total"];
-                LastUsersSearchTotalPages = (int)data["total_pages"];
+                LastUsersSearchTotalResults = (int) data["total"];
+                LastUsersSearchTotalPages = (int) data["total_pages"];
 
-                foreach (JObject item in results) {
+                foreach (JObject item in results)
+                {
                     var user = ExtractUser(item);
                     listUsers.Add(user);
                 }
 
                 return listUsers;
-
-            } catch /*(HttpRequestException hre)*/ {
+            }
+            catch /*(HttpRequestException hre)*/
+            {
                 LastUsersSearchTotalResults = 0;
                 LastUsersSearchTotalPages = 0;
                 return listUsers;
             }
         }
+
         #endregion search
 
         #region others
+
         /// <summary>
         /// Get a list of counts for all of Unsplash.
         /// </summary>
         /// <returns>A list of Unplash's stats.</returns>
-        public async Task<UnplashTotalStats> GetTotalStats() {
+        public async Task<UnplashTotalStats> GetTotalStats()
+        {
             var url = GetUrl("total_stats");
             var response = await Fetch(url);
 
             if (response == null) return null;
             var data = JObject.Parse(response);
 
-            return new UnplashTotalStats() {
-                Photos = double.Parse((string)data["photos"]),
-                Downloads = double.Parse((string)data["downloads"]),
-                Views = double.Parse((string)data["views"]),
-                Likes = double.Parse((string)data["likes"]),
-                Photographers = double.Parse((string)data["photographers"]),
-                Pixels = double.Parse((string)data["pixels"]),
-                DownloadsPerSecond = double.Parse((string)data["downloads_per_second"]),
-                ViewsPerSecond = double.Parse((string)data["views_per_second"]),
-                Developers = int.Parse((string)data["developers"]),
-                Applications = int.Parse((string)data["applications"]),
-                Requests = double.Parse((string)data["requests"])
+            return new UnplashTotalStats()
+            {
+                Photos = double.Parse((string) data["photos"]),
+                Downloads = double.Parse((string) data["downloads"]),
+                Views = double.Parse((string) data["views"]),
+                Likes = double.Parse((string) data["likes"]),
+                Photographers = double.Parse((string) data["photographers"]),
+                Pixels = double.Parse((string) data["pixels"]),
+                DownloadsPerSecond = double.Parse((string) data["downloads_per_second"]),
+                ViewsPerSecond = double.Parse((string) data["views_per_second"]),
+                Developers = int.Parse((string) data["developers"]),
+                Applications = int.Parse((string) data["applications"]),
+                Requests = double.Parse((string) data["requests"])
             };
         }
 
@@ -929,38 +1085,45 @@ namespace Unsplasharp {
         /// Get the overall Unsplash stats for the past 30 days.
         /// </summary>
         /// <returns>A list of Unplash's stats.</returns>
-        public async Task<UnplashMonthlyStats> GetMonthlyStats() {
+        public async Task<UnplashMonthlyStats> GetMonthlyStats()
+        {
             var url = GetUrl("monthly_stats");
             var response = await Fetch(url);
 
             if (response == null) return null;
             var data = JObject.Parse(response);
 
-            return new UnplashMonthlyStats() {
-                Downloads = double.Parse((string)data["downloads"]),
-                Views = double.Parse((string)data["views"]),
-                Likes = double.Parse((string)data["likes"]),
-                NewPhotos = double.Parse((string)data["new_photos"]),
-                NewPhotographers = double.Parse((string)data["new_photographers"]),
-                NewPixels = double.Parse((string)data["new_pixels"]),
-                NewDevelopers = int.Parse((string)data["new_developers"]),
-                NewApplications = int.Parse((string)data["new_applications"]),
-                NewRequests = double.Parse((string)data["new_requests"])
+            return new UnplashMonthlyStats()
+            {
+                Downloads = double.Parse((string) data["downloads"]),
+                Views = double.Parse((string) data["views"]),
+                Likes = double.Parse((string) data["likes"]),
+                NewPhotos = double.Parse((string) data["new_photos"]),
+                NewPhotographers = double.Parse((string) data["new_photographers"]),
+                NewPixels = double.Parse((string) data["new_pixels"]),
+                NewDevelopers = int.Parse((string) data["new_developers"]),
+                NewApplications = int.Parse((string) data["new_applications"]),
+                NewRequests = double.Parse((string) data["new_requests"])
             };
         }
+
         #endregion others
 
         // ---------------
         // PRIVATE METHODS
         // ---------------
+
         #region private methods
+
         /// <summary>
         /// Get the Unplash URL according to the specified type.
         /// </summary>
         /// <param name="type">URL shortname to retrieve.</param>
         /// <returns>An URL</returns>
-        private string GetUrl(string type) {
-            switch (type) {
+        private string GetUrl(string type)
+        {
+            switch (type)
+            {
                 case "photos":
                     return URIBase + URIEndpoints["photos"];
                 case "curated_photos":
@@ -991,22 +1154,27 @@ namespace Unsplasharp {
         /// </summary>
         /// <param name="url">URL to reach.</param>
         /// <returns>Body response as string.</returns>
-        private async Task<string> Fetch(string url) {
+        private async Task<string> Fetch(string url)
+        {
             HttpClient http = new HttpClient();
             http.DefaultRequestHeaders.Authorization =
                 new AuthenticationHeaderValue("Client-ID", ApplicationId);
             HttpResponseMessage response = null;
 
-            try {
+            try
+            {
                 response = await http.GetAsync(url);
+                //await Task.Factory.StartNew(response.EnsureSuccessStatusCode);
                 response.EnsureSuccessStatusCode();
                 var responseBodyAsText = await response.Content.ReadAsStringAsync();
 
+                //await  Task.Factory.StartNew(() => UpdateRateLimit(response));
                 UpdateRateLimit(response);
 
                 return responseBodyAsText;
-
-            } catch {
+            }
+            catch
+            {
                 return null;
             }
         }
@@ -1016,7 +1184,8 @@ namespace Unsplasharp {
         /// </summary>
         /// <param name="data">Data to test.</param>
         /// <returns>True if the data is null</returns>
-        private bool IsNull(JToken data) {
+        private bool IsNull(JToken data)
+        {
             return data == null ||
                    data.Type == JTokenType.Null ||
                    data.Type == JTokenType.String;
@@ -1027,36 +1196,43 @@ namespace Unsplasharp {
         /// </summary>
         /// <param name="s">String to test.</param>
         /// <returns>True is the string is neither null nor empty.</returns>
-        private bool StringNotNull(string s) {
+        private bool StringNotNull(string s)
+        {
             return !string.IsNullOrEmpty(s) && !string.IsNullOrWhiteSpace(s);
         }
 
-        private int ExtractNumber(JToken data) {
+        private int ExtractNumber(JToken data)
+        {
             if (IsNull(data)) return 0;
-            return string.IsNullOrEmpty((string)data) ? 0 : int.Parse((string)data);
+            return string.IsNullOrEmpty((string) data) ? 0 : int.Parse((string) data);
         }
 
-        private bool ExtractBoolean(JToken data) {
+        private bool ExtractBoolean(JToken data)
+        {
             if (IsNull(data)) return false;
-            return string.IsNullOrEmpty((string)data) ? false : (bool)data;
+            return string.IsNullOrEmpty((string) data) ? false : (bool) data;
         }
 
-        private List<Category> ExtractCategories(JToken data) {
+        private List<Category> ExtractCategories(JToken data)
+        {
             var categories = new List<Category>();
             if (IsNull(data)) return categories;
 
-            var dataCategories = (JArray)data;
+            var dataCategories = (JArray) data;
 
             if (dataCategories.Count == 0) return categories;
 
-            foreach (JObject item in dataCategories) {
-                var category = new Category() {
-                    Id = (string)item["id"],
-                    Title = (string)item["title"],
-                    PhotoCount = (int)item["photo_count"],
-                    Links = new CategoryLinks() {
-                        Self = (string)item["links"]["self"],
-                        Photos = (string)item["links"]["photos"],
+            foreach (JObject item in dataCategories)
+            {
+                var category = new Category()
+                {
+                    Id = (string) item["id"],
+                    Title = (string) item["title"],
+                    PhotoCount = (int) item["photo_count"],
+                    Links = new CategoryLinks()
+                    {
+                        Self = (string) item["links"]["self"],
+                        Photos = (string) item["links"]["photos"],
                     }
                 };
 
@@ -1066,31 +1242,35 @@ namespace Unsplasharp {
             return categories;
         }
 
-        private Badge ExtractBadge(JToken data) {
+        private Badge ExtractBadge(JToken data)
+        {
             if (IsNull(data)) return null;
 
-            return new Badge() {
-                Title = (string)data["title"],
-                Primary = (bool)data["primary"],
-                Slug = (string)data["slug"],
-                Link = (string)data["link"]
+            return new Badge()
+            {
+                Title = (string) data["title"],
+                Primary = (bool) data["primary"],
+                Slug = (string) data["slug"],
+                Link = (string) data["link"]
             };
         }
 
-        private User ExtractUser(JToken data) {
+        private User ExtractUser(JToken data)
+        {
             if (IsNull(data)) return null;
 
-            return new User() {
-                Id = (string)data["id"],
-                UpdatedAt = (string)data["updated_at"],
-                FirstName = (string)data["first_name"],
-                LastName = (string)data["last_name"],
-                Username = (string)data["username"],
-                Name = (string)data["name"],
-                TwitterUsername = (string)data["twitter_username"],
-                PortfolioUrl = (string)data["portfolio_url"],
-                Bio = (string)data["bio"],
-                Location = (string)data["location"],
+            return new User()
+            {
+                Id = (string) data["id"],
+                UpdatedAt = (string) data["updated_at"],
+                FirstName = (string) data["first_name"],
+                LastName = (string) data["last_name"],
+                Username = (string) data["username"],
+                Name = (string) data["name"],
+                TwitterUsername = (string) data["twitter_username"],
+                PortfolioUrl = (string) data["portfolio_url"],
+                Bio = (string) data["bio"],
+                Location = (string) data["location"],
                 TotalLikes = ExtractNumber(data["total_likes"]),
                 TotalPhotos = ExtractNumber(data["total_photos"]),
                 TotalCollections = ExtractNumber(data["total_collections"]),
@@ -1098,61 +1278,70 @@ namespace Unsplasharp {
                 FollowersCount = ExtractNumber(data["followers_count"]),
                 FollowingCount = ExtractNumber(data["following_count"]),
 
-                ProfileImage = new ProfileImage() {
-                    Small = (string)data["profile_image"]["small"],
-                    Medium = (string)data["profile_image"]["medium"],
-                    Large = (string)data["profile_image"]["large"]
+                ProfileImage = new ProfileImage()
+                {
+                    Small = (string) data["profile_image"]["small"],
+                    Medium = (string) data["profile_image"]["medium"],
+                    Large = (string) data["profile_image"]["large"]
                 },
 
                 Badge = ExtractBadge(data["badge"]),
 
-                Links = new UserLinks() {
-                    Self = (string)data["links"]["self"],
-                    Html = (string)data["links"]["html"],
-                    Photos = (string)data["links"]["photos"],
-                    Likes = (string)data["links"]["likes"],
-                    Portfolio = (string)data["links"]["portfolio"],
+                Links = new UserLinks()
+                {
+                    Self = (string) data["links"]["self"],
+                    Html = (string) data["links"]["html"],
+                    Photos = (string) data["links"]["photos"],
+                    Likes = (string) data["links"]["likes"],
+                    Portfolio = (string) data["links"]["portfolio"],
                 }
             };
         }
 
-        private Exif ExtractExif(JToken data) {
+        private Exif ExtractExif(JToken data)
+        {
             if (IsNull(data)) return null;
 
-            return new Exif() {
-                Make = (string)data["make"],
-                Model = (string)data["model"],
-                Iso = (int?)data["iso"],
-                FocalLength = (string)data["focal_length"],
-                Aperture = (string)data["aperture"],
+            return new Exif()
+            {
+                Make = (string) data["make"],
+                Model = (string) data["model"],
+                Iso = (int?) data["iso"],
+                FocalLength = (string) data["focal_length"],
+                Aperture = (string) data["aperture"],
             };
         }
 
-        private Location ExtractLocation(JToken data) {
+        private Location ExtractLocation(JToken data)
+        {
             if (IsNull(data)) return null;
 
-            return new Location() {
-                Title = (string)data["title"],
-                Name = (string)data["name"],
-                City = (string)data["city"],
-                Country = (string)data["country"],
+            return new Location()
+            {
+                Title = (string) data["title"],
+                Name = (string) data["name"],
+                City = (string) data["city"],
+                Country = (string) data["country"],
 
-                Position = new Position() {
-                    Latitude = IsNull(data["position"]["latitude"]) ? 0 : (int)data["position"]["latitude"],
-                    Longitude = IsNull(data["position"]["longitude"]) ? 0 : (int)data["position"]["longitude"],
+                Position = new Position()
+                {
+                    Latitude = IsNull(data["position"]["latitude"]) ? 0 : (int) data["position"]["latitude"],
+                    Longitude = IsNull(data["position"]["longitude"]) ? 0 : (int) data["position"]["longitude"],
                 }
             };
         }
 
-        private Photo ExtractPhoto(JToken data) {
+        private Photo ExtractPhoto(JToken data)
+        {
             if (IsNull(data)) return null;
 
-            return new Photo() {
-                Id = (string)data["id"],
-                Color = (string)data["color"],
-                CreatedAt = (string)data["created_at"],
-                UpdatedAt = (string)data["updated_at"],
-                Description = (string)data["description"],
+            return new Photo()
+            {
+                Id = (string) data["id"],
+                Color = (string) data["color"],
+                CreatedAt = (string) data["created_at"],
+                UpdatedAt = (string) data["updated_at"],
+                Description = (string) data["description"],
                 Downloads = ExtractNumber(data["downloads"]),
                 Likes = ExtractNumber(data["likes"]),
                 IsLikedByUser = ExtractBoolean(data["liked_by_user"]),
@@ -1163,82 +1352,93 @@ namespace Unsplasharp {
 
                 Location = ExtractLocation(data["location"]),
 
-                Urls = new Urls() {
-                    Raw = (string)data["urls"]["raw"],
-                    Full = (string)data["urls"]["full"],
-                    Regular = (string)data["urls"]["regular"],
-                    Small = (string)data["urls"]["small"],
-                    Thumbnail = (string)data["urls"]["thumb"],
-                    Custom = (string)data["urls"]["custom"]
+                Urls = new Urls()
+                {
+                    Raw = (string) data["urls"]["raw"],
+                    Full = (string) data["urls"]["full"],
+                    Regular = (string) data["urls"]["regular"],
+                    Small = (string) data["urls"]["small"],
+                    Thumbnail = (string) data["urls"]["thumb"],
+                    Custom = (string) data["urls"]["custom"]
                 },
 
                 Categories = ExtractCategories(data["categories"]),
 
-                Links = new PhotoLinks() {
-                    Download = (string)data["links"]["download"],
-                    DownloadLocation = (string)data["links"]["download_location"],
-                    Html = (string)data["links"]["html"],
-                    Self = (string)data["links"]["self"],
+                Links = new PhotoLinks()
+                {
+                    Download = (string) data["links"]["download"],
+                    DownloadLocation = (string) data["links"]["download_location"],
+                    Html = (string) data["links"]["html"],
+                    Self = (string) data["links"]["self"],
                 },
 
                 User = ExtractUser(data["user"])
             };
         }
 
-        private Collection ExtractCollection(JToken data) {
+        private Collection ExtractCollection(JToken data)
+        {
             if (IsNull(data)) return null;
 
-            return new Collection() {
-                Id = (string)data["id"],
-                Title = (string)data["title"],
-                Description = (string)data["description"],
-                PublishedAt = (string)data["published_at"],
-                UpdatedAt = (string)data["updated_at"],
+            return new Collection()
+            {
+                Id = (string) data["id"],
+                Title = (string) data["title"],
+                Description = (string) data["description"],
+                PublishedAt = (string) data["published_at"],
+                UpdatedAt = (string) data["updated_at"],
                 IsCurated = ExtractBoolean(data["curated"]),
                 IsFeatured = ExtractBoolean(data["featured"]),
                 TotalPhotos = ExtractNumber(data["total_photos"]),
                 IsPrivate = ExtractBoolean(data["private"]),
-                ShareKey = (string)data["share_key"],
+                ShareKey = (string) data["share_key"],
 
                 CoverPhoto = ExtractPhoto(data["cover_photo"]),
 
                 User = ExtractUser(data["user"]),
 
-                Links = new CollectionLinks() {
-                    Self = (string)data["links"]["self"],
-                    Html = (string)data["links"]["html"],
-                    Photos = (string)data["links"]["photos"],
-                    Related = (string)data["links"]["related"],
+                Links = new CollectionLinks()
+                {
+                    Self = (string) data["links"]["self"],
+                    Html = (string) data["links"]["html"],
+                    Photos = (string) data["links"]["photos"],
+                    Related = (string) data["links"]["related"],
                 }
             };
         }
 
-        private StatsHistorical ExtractHistorical(JToken data) {
+        private StatsHistorical ExtractHistorical(JToken data)
+        {
             if (IsNull(data)) return null;
 
-            return new StatsHistorical() {
-                Change = double.Parse((string)data["historical"]["change"]),
-                Average = string.IsNullOrEmpty((string)data["historical"]["average"]) ? 
-                            0 : int.Parse((string)data["historical"]["average"]),
-                Resolution = (string)data["historical"]["resolution"],
-                Quantity = int.Parse((string)data["historical"]["quantity"]),
+            return new StatsHistorical()
+            {
+                Change = double.Parse((string) data["historical"]["change"]),
+                Average = string.IsNullOrEmpty((string) data["historical"]["average"])
+                    ? 0
+                    : int.Parse((string) data["historical"]["average"]),
+                Resolution = (string) data["historical"]["resolution"],
+                Quantity = int.Parse((string) data["historical"]["quantity"]),
                 Values = ExtractStatsValues(data["historical"]["values"])
             };
         }
 
-        private List<StatsValue> ExtractStatsValues(JToken data) {
+        private List<StatsValue> ExtractStatsValues(JToken data)
+        {
             var listStatsValues = new List<StatsValue>();
 
             if (IsNull(data)) return listStatsValues;
 
-            var dataStatsValues = (JArray)data;
+            var dataStatsValues = (JArray) data;
 
             if (dataStatsValues.Count == 0) return listStatsValues;
 
-            foreach (JObject item in dataStatsValues) {
-                var statsValues = new StatsValue() {
-                    Date = (string)item["date"],
-                    Value = double.Parse((string)item["value"])
+            foreach (JObject item in dataStatsValues)
+            {
+                var statsValues = new StatsValue()
+                {
+                    Date = (string) item["date"],
+                    Value = double.Parse((string) item["value"])
                 };
 
                 listStatsValues.Add(statsValues);
@@ -1247,8 +1447,10 @@ namespace Unsplasharp {
             return listStatsValues;
         }
 
-        private string ConvertOderBy(OrderBy orderBy) {
-            switch (orderBy) {
+        private string ConvertOderBy(OrderBy orderBy)
+        {
+            switch (orderBy)
+            {
                 case OrderBy.Latest:
                     return "latest";
                 case OrderBy.Oldest:
@@ -1260,8 +1462,10 @@ namespace Unsplasharp {
             }
         }
 
-        private string ConvertOrientation(Orientation orientation) {
-            switch (orientation) {
+        private string ConvertOrientation(Orientation orientation)
+        {
+            switch (orientation)
+            {
                 case Orientation.Landscape:
                     return "landscape";
                 case Orientation.Portrait:
@@ -1273,8 +1477,10 @@ namespace Unsplasharp {
             }
         }
 
-        private string ConvertResolution(Resolution resolution) {
-            switch (resolution) {
+        private string ConvertResolution(Resolution resolution)
+        {
+            switch (resolution)
+            {
                 case Resolution.Days:
                     return "days";
                 default:
@@ -1289,10 +1495,12 @@ namespace Unsplasharp {
         /// <param name="queryName">Query string's name.</param>
         /// <param name="queryValue">Query string's value.</param>
         /// <returns>A new URL containing the query string.</returns>
-        private string AddQueryString(string url, string queryName, string queryValue) {
+        private string AddQueryString(string url, string queryName, string queryValue)
+        {
             var indexQuestionMark = url.LastIndexOf("?");
 
-            if (indexQuestionMark == -1) {
+            if (indexQuestionMark == -1)
+            {
                 return string.Format("{0}?{1}={2}", url, queryName, queryValue);
             }
 
@@ -1306,18 +1514,24 @@ namespace Unsplasharp {
         /// <param name="queryName">Query string's name.</param>
         /// <param name="queryValue">Query string's value.</param>
         /// <returns>A new URL containing the query string.</returns>
-        private string AddQueryString(string url, string queryName, int queryValue) {
+        private string AddQueryString(string url, string queryName, int queryValue)
+        {
             return AddQueryString(url, queryName, queryValue.ToString());
         }
 
-        private void UpdateRateLimit(HttpResponseMessage response) {
-            if (response.Headers.TryGetValues("X-Ratelimit-Limit", out IEnumerable<string> maxRateLimit)) {
+        private void UpdateRateLimit(HttpResponseMessage response)
+        {
+            if (response.Headers.TryGetValues("X-Ratelimit-Limit", out IEnumerable<string> maxRateLimit))
+            {
                 MaxRateLimit = int.Parse(maxRateLimit.First());
             }
-            if (response.Headers.TryGetValues("X-Ratelimit-Remaining", out IEnumerable<string> rateLimitRemaining)) {
+
+            if (response.Headers.TryGetValues("X-Ratelimit-Remaining", out IEnumerable<string> rateLimitRemaining))
+            {
                 RateLimitRemaining = int.Parse(rateLimitRemaining.First());
             }
         }
+
         #endregion private methods
     }
 }
