@@ -1,53 +1,84 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
+using System.ComponentModel;
+using System.Diagnostics;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-using Unsplasharp;
-using Unsplasharp.Models;
+using MaterialDesignColors;
+using Wallee.Utils;
 
 namespace Wallee.Pages
 {
     /// <summary>
     /// Логика взаимодействия для PageMorePhoto.xaml
     /// </summary>
-    public partial class PageMorePhoto : Page
+    public partial class PageMorePhoto : UserControl, INotifyPropertyChanged
     {
-        private UnsplasharpClient client;
+        public AsyncCommand SearchCommand { get; }
+
         public PageMorePhoto()
         {
+            //SearchCommand = new AsyncCommand(ButtonBase_OnClickUpdata);
+
             InitializeComponent();
-  //          UnsplasharpClient client = new UnsplasharpClient("");
-            client = new UnsplasharpClient("7c508cce62ff5e555102ef45c3a33854cd106e8fd6d46999a0b33f5e92001844");
-            
         }
 
-        public async void GetPhoto()
+        #region Property TextSerch(string)
+
+        private string _TextSerch;
+
+        public string TextSerch
         {
-            var photosFound = await (client.SearchPhotos("mountains"));
-            
-            foreach (var photo in photosFound)
+            get { return _TextSerch; }
+            set
             {
-                ListImages.Add(photo);
+                _TextSerch = value;
+                OnPropertyChanged(nameof(TextSerch));
             }
         }
 
-        public ObservableCollection<Photo> ListImages { get; set; }
-         = new ObservableCollection<Photo>();
+        #endregion
 
-        private void ButtonBase_OnClickUpdata(object sender, RoutedEventArgs e)
+        private int countPage = 1;
+        private string lastQuery = ";";
+
+        private async void ButtonSearch_OnClick(object sender, RoutedEventArgs e)
         {
-            GetPhoto();
+            Console.WriteLine("Clock");
+
+            if (lastQuery == TextSerch) return;
+            lastQuery = TextSerch;
+            countPage = 1;
+            ServiceUnsplash.Reset();
+
+            Console.WriteLine("do");
+            await ServiceUnsplash.GetPhoto(countPage, TextSerch, this.Dispatcher);
+
+            Console.WriteLine("completed");
         }
+
+        #region System
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        protected virtual void OnPropertyChanged(string propertyName = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
+        #endregion
+
+        private async void ButtonBase_OnClick(object sender, RoutedEventArgs e)
+        {
+            countPage++;
+            await ServiceUnsplash.GetPhoto(countPage, TextSerch, this.Dispatcher);
+        }
+
+        
+    }
+
+    public static class CommandPageMorePhoto
+    {
     }
 }

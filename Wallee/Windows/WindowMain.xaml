@@ -4,12 +4,11 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Wallee"
+        xmlns:windows="clr-namespace:Wallee.Windows"
         mc:Ignorable="d"
-        DataContext="{Binding RelativeSource={RelativeSource Self}}"
-        Title="WindowMain" Height="450" Width="800"
-        >
-    <Frame Content="{Binding SourcePage}" NavigationUIVisibility="Hidden">
+        WindowStyle="None"
+        Style="{StaticResource MyWindowStyle}"
+        Height="450" Width="800">
+    <ContentPresenter Content="{Binding RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=Window}, Path=SourcePage}" />
 
-    </Frame>
-    
 </Window>

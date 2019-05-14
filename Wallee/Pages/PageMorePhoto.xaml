@@ -1,36 +1,53 @@
-﻿<Page x:Class="Wallee.Pages.PageMorePhoto"
+﻿<UserControl x:Class="Wallee.Pages.PageMorePhoto"
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
       xmlns:local="clr-namespace:Wallee.Pages"
       xmlns:utils="clr-namespace:Wallee.Utils"
-      mc:Ignorable="d" 
+      xmlns:models="clr-namespace:Unsplasharp.Models;assembly=Unsplasharp"
+      mc:Ignorable="d"
+      Name="ThisPage"
       d:DesignHeight="450" d:DesignWidth="800"
-      DataContext="{Binding RelativeSource={RelativeSource Mode=Self}}"
-      Title="PageMorePhoto">
-<Page.Resources>
-        <utils:ConverterStringLinkToUrl x:Key="ConverterStringLinkToUrl"/>
-</Page.Resources>
+      DataContext="{Binding RelativeSource={RelativeSource Mode=Self}}">
+    <UserControl.Resources>
+        <utils:ConverterStringLinkToUrl x:Key="ConverterStringLinkToUrl" />
+        <DataTemplate x:Key="OneImage" DataType="{x:Type models:Photo}">
+            <Image Width="250"
+                   Margin="{Binding Margin }"
+                   Source="{Binding Urls, IsAsync=True, Converter={StaticResource ConverterStringLinkToUrl}}" />
+        </DataTemplate>
+
+    </UserControl.Resources>
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition/>
-            <RowDefinition Height="30"/>
+            <RowDefinition Height="Auto" />
+            <RowDefinition />
+            <RowDefinition Height="30" />
         </Grid.RowDefinitions>
-        <ScrollViewer>
-        <ItemsControl  ItemsSource="{Binding ListImages}">
-        <ItemsControl.ItemsPanel>
-            <ItemsPanelTemplate>
-                <WrapPanel/>
-            </ItemsPanelTemplate>
-        </ItemsControl.ItemsPanel>
-        <ItemsControl.ItemTemplate>
-            <DataTemplate>
-                <Image Width="250" Source="{Binding Urls, IsAsync=True, Converter={StaticResource ConverterStringLinkToUrl}}"></Image>
-            </DataTemplate>
-        </ItemsControl.ItemTemplate>
-    </ItemsControl>
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <TextBox Text="{Binding ElementName=ThisPage, Path=TextSerch}" />
+            <Button  Grid.Column="1" Click="ButtonSearch_OnClick" Command="{Binding Path=SearchCommand, IsAsync=True}"  Content="Search" Style="{DynamicResource ButtonStyle1}"  />
+        </Grid>
+        <ScrollViewer Grid.Row="1">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition />
+                    <ColumnDefinition />
+                    <ColumnDefinition />
+                </Grid.ColumnDefinitions>
+                <ItemsControl ItemsSource="{Binding Source={x:Static utils:ServiceUnsplash.ListOne}}"
+                              ItemTemplate="{StaticResource OneImage}" />
+                <ItemsControl Grid.Column="1" ItemsSource="{Binding Source={x:Static utils:ServiceUnsplash.ListTwo}}"
+                              ItemTemplate="{StaticResource OneImage}" />
+                <ItemsControl Grid.Column="2" ItemsSource="{Binding Source={x:Static utils:ServiceUnsplash.ListThree}}"
+                              ItemTemplate="{StaticResource OneImage}" />
+            </Grid>
         </ScrollViewer>
-        <Button Grid.Row="1" Click="ButtonBase_OnClickUpdata">Update</Button>
+        <Button Grid.Row="2" Content="NextPage" Click="ButtonBase_OnClick" />
     </Grid>
-</Page>
+</UserControl>
