@@ -38,14 +38,15 @@ namespace Wallee.Utils
 
 
         public static UnsplasharpClient client { get; set; } =
-            new UnsplasharpClient("7c508cce62ff5e555102ef45c3a33854cd106e8fd6d46999a0b33f5e92001844");
-
+         //   new UnsplasharpClient("7c508cce62ff5e555102ef45c3a33854cd106e8fd6d46999a0b33f5e92001844");
+          new UnsplasharpClient("93123f0db401f8367e061a60e9b0976b9bc9c3cafe5133f344bba4010c97a4de",
+            "ec8401ec0727226a41f9fea4ef184c10f7efef4b009ee910dbf3ca386a");
         public static async Task GetPhoto(int numPage, string searchText, Dispatcher dispatcher)
         {
             var te = Stopwatch.StartNew();
             Console.WriteLine("1/start/" + nameof(GetPhoto) + '/' + te.ElapsedMilliseconds);
 
-            var photosFound = await client.SearchPhotos(searchText, numPage, 30);
+            var photosFound = await client.SearchPhotos(searchText, numPage, 40);
 
             Console.WriteLine("2/fin/" + nameof(GetPhoto) + '/' + te.ElapsedMilliseconds);
             await Task.Factory.StartNew(() => ShowPhoto(photosFound, dispatcher));
