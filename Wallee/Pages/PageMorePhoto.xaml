@@ -12,6 +12,7 @@
              xmlns:converters="clr-namespace:StyleFluentWpf.Converters;assembly=StyleFluentWpf"
              xmlns:userControls="clr-namespace:Wallee.UserControls"
              xmlns:attacheds="clr-namespace:StyleFluentWpf.Attacheds;assembly=StyleFluentWpf"
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              mc:Ignorable="d"
              Name="ThisPage"
              d:DesignHeight="450" d:DesignWidth="800"
@@ -40,7 +41,7 @@
                                 <MultiBinding Converter="{StaticResource ConvertorAdditionCommandParameter}">
                                     <Binding
                                         Path="." />
-                                    <Binding Path="."/>
+                                    <Binding Path="." />
                                 </MultiBinding>
                             </Interactions:InvokeCommandAction.CommandParameter>
                         </Interactions:InvokeCommandAction>
@@ -73,17 +74,76 @@
                 <RowDefinition />
                 <RowDefinition Height="30" />
             </Grid.RowDefinitions>
-            <Grid>
+            <!--Блок поиска-->
+            <Grid Margin="20,10">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition />
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
-                <TextBox Text="{Binding ElementName=ThisPage, Path=TextSerch}" />
+                <!--Текстовое поле поиска-->
+                <Grid x:Name="WatermarkWrapper">
+                    <TextBox x:Name="WaterMarkedTextBox"
+
+                             Background="#F6F6F6" BorderThickness="1,1,0.42,1"
+                             SnapsToDevicePixels="True"
+                             Padding="5,0"
+                             VerticalContentAlignment="Center"
+                             UseLayoutRounding="False"
+                             BorderBrush="#929292" Foreground="Black" Height="32"
+                             Text="{Binding ElementName=ThisPage, Path=TextSerch, FallbackValue='Hello World'}" />
+                    <Grid IsHitTestVisible="False" VerticalAlignment="Center" HorizontalAlignment="Left"
+                          Margin="10,5,0,5">
+                        <Grid.Style>
+                            <Style TargetType="{x:Type Grid}">
+                                <Setter Property="Visibility" Value="Collapsed" />
+                                <Style.Triggers>
+                                    <MultiDataTrigger>
+                                        <MultiDataTrigger.Conditions>
+                                            <Condition Binding="{Binding ElementName=ThisPage, Path=TextSerch}"
+                                                       Value="" />
+                                            <Condition
+                                                Binding="{Binding ElementName=WaterMarkedTextBox, Path=IsKeyboardFocused}"
+                                                Value="False" />
+                                        </MultiDataTrigger.Conditions>
+                                        <MultiDataTrigger.Setters>
+                                            <Setter Property="Visibility" Value="Visible" />
+                                        </MultiDataTrigger.Setters>
+                                    </MultiDataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Grid.Style>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition />
+                            <ColumnDefinition Width="7.42" />
+                            <ColumnDefinition />
+                        </Grid.ColumnDefinitions>
+                        <Image
+                            Height="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Grid}, Path=ActualHeight}"
+                            Source="{StaticResource Icons.Search.DarkGray}" />
+                        <TextBlock Grid.Column="2" Foreground="Gray" VerticalAlignment="Center" FontSize="14"
+                                   Text="Поиск..." />
+                    </Grid>
+                </Grid>
+                <!--Кнопка поиска-->
                 <Button Grid.Column="1" Click="ButtonSearch_OnClick"
+                        materialDesign:ShadowAssist.ShadowDepth="Depth0"
+                        materialDesign:ShadowAssist.Darken="False"
+                        materialDesign:ShadowAssist.ShadowEdges="None"
+                        Foreground="Black"
+                        SnapsToDevicePixels="True"
+                        FontWeight="Light"
+                        UseLayoutRounding="False"
+                        BorderBrush="#929292"
+                        BorderThickness="0.42,1,1,1"
+                        Background="#E8E8E8"
                         Command="{Binding Path=SearchCommand, IsAsync=True}"
                         Content="Search" Style="{DynamicResource ButtonStyle1}" />
             </Grid>
-            <ScrollViewer Grid.Row="1">
+            <!--Блок отображения картинок-->
+            <ScrollViewer
+                Grid.Row="1"
+                attacheds:AttachedScrollViewer.TriggerInvokeCommand="0.8"
+                attacheds:AttachedScrollViewer.CommandOnTrigger="{x:Static local:PageMorePhoto.CommandNextPageImage}">
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition />
@@ -100,7 +160,14 @@
                                   ItemTemplate="{StaticResource OneImage}" />
                 </Grid>
             </ScrollViewer>
-            <Button Grid.Row="2" Content="NextPage" Click="ButtonBase_OnClick" />
+            <StackPanel Grid.Row="2" Orientation="Horizontal">
+                <TextBlock Background="DarkGray" Foreground="White"
+                           Text="{Binding StringFormat=Count One \={0}, Source={x:Static utils:ServiceUnsplash.ListOne}, Path=Count}" />
+                <TextBlock Background="DarkGray" Foreground="White"
+                           Text="{Binding StringFormat=Count Two \={0}, Source={x:Static utils:ServiceUnsplash.ListTwo}, Path=Count}" />
+                <TextBlock Background="DarkGray" Foreground="White"
+                           Text="{Binding StringFormat=Count Three \={0}, Source={x:Static utils:ServiceUnsplash.ListThree}, Path=Count}" />
+            </StackPanel>
         </Grid>
     </controlBlackOut:ControlBlackOut>
 </UserControl>

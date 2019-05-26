@@ -12,7 +12,7 @@
                 <ResourceDictionary
                     Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Defaults.xaml" />
                 <ResourceDictionary
-                    Source="pack://application:,,,/MaterialDesignColors;component/Themes/Recommended/Primary/MaterialDesignColor.DeepPurple.xaml" />
+                    Source="pack://application:,,,/MaterialDesignColors;component/Themes/Recommended/Primary/materialdesigncolor.blue.xaml" />
                 <ResourceDictionary
                     Source="pack://application:,,,/MaterialDesignColors;component/Themes/Recommended/Accent/MaterialDesignColor.Lime.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/StyleFluentWpf;component/Themes/Color.xaml" />
@@ -23,6 +23,7 @@
                 <ResourceDictionary Source="Styles/StyleWindow.xaml" />
                 <ResourceDictionary Source="Resources/Icons.xaml" />
             </ResourceDictionary.MergedDictionaries>
+            <SolidColorBrush x:Key="PrimaryHueMidBrush" Color="{StaticResource Colors.Blue.Light}" />
             <Style x:Key="ButtonStyle1" TargetType="{x:Type Button}">
                 <Setter Property="FocusVisualStyle">
                     <Setter.Value>
@@ -48,7 +49,7 @@
                         Value="{DynamicResource PrimaryHueMidBrush}" />
                 <Setter Property="materialDesign:RippleAssist.Feedback" Value="White" />
                 <Setter Property="Cursor" Value="Hand" />
-                <Setter Property="materialDesign:ShadowAssist.ShadowDepth" Value="Depth1" />
+                <Setter Property="materialDesign:ShadowAssist.ShadowDepth" Value="Depth0" />
                 <Setter Property="FontWeight" Value="Medium" />
                 <Setter Property="FontSize" Value="14" />
                 <Setter Property="BorderThickness" Value="1" />
@@ -67,7 +68,8 @@
                                     <Grid>
                                         <Border x:Name="border" BorderBrush="{TemplateBinding BorderBrush}"
                                                 BorderThickness="{TemplateBinding BorderThickness}"
-                                                Background="{TemplateBinding Background}" CornerRadius="2">
+                                                UseLayoutRounding="True"
+                                                Background="{TemplateBinding Background}" CornerRadius="0">
                                             <Border.Effect>
                                                 <Binding Path="(materialDesign:ShadowAssist.ShadowDepth)"
                                                          RelativeSource="{RelativeSource TemplatedParent}">

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -29,7 +30,15 @@ namespace Wallee.Pages
 
         #endregion
 
+        /// <summary>
+        /// Команда для смены выбранного изображения
+        /// </summary>
         public static RoutedUICommand CommandSelectImage { get; } = new RoutedUICommand();
+
+        /// <summary>
+        /// Подгрузить следующую страницу изображений
+        /// </summary>
+        public static RoutedUICommand CommandNextPageImage { get; } = new RoutedUICommand();
 
         /// <summary>
         /// Перенестив выбор следующее изображение
@@ -49,11 +58,24 @@ namespace Wallee.Pages
             CommandBindings.Add(new CommandBinding(CommandSelectImage, Executed_SelectImage));
             CommandBindings.Add(new CommandBinding(CommandNextImage, Executed_NextImage));
             CommandBindings.Add(new CommandBinding(CommandBackImage, Executed_BackImage));
+            CommandBindings.Add(new CommandBinding(CommandNextPageImage, Executed_NextPageImage));
 
             CommandNextImage.InputGestures.Add(new KeyGesture(Key.Right));
             CommandBackImage.InputGestures.Add(new KeyGesture(Key.Left));
 
             InitializeComponent();
+        }
+
+        private bool lockNextPage = false;
+
+        private async void Executed_NextPageImage(object sender, ExecutedRoutedEventArgs e)
+        {
+            if (!lockNextPage)
+            {
+                lockNextPage = true;
+                await Task.Run(() => ButtonBase_OnClick(sender, e));
+                lockNextPage = false;
+            }
         }
 
         private void Executed_NextImage(object sender, ExecutedRoutedEventArgs e)
@@ -115,6 +137,7 @@ namespace Wallee.Pages
         }
 
         #endregion
+
 
         private async void ButtonBase_OnClick(object sender, RoutedEventArgs e)
         {
