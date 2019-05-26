@@ -21,6 +21,7 @@
 
                 <ResourceDictionary Source="Styles/Colors.xaml" />
                 <ResourceDictionary Source="Styles/StyleWindow.xaml" />
+                <ResourceDictionary Source="Resources/Icons.xaml" />
             </ResourceDictionary.MergedDictionaries>
             <Style x:Key="ButtonStyle1" TargetType="{x:Type Button}">
                 <Setter Property="FocusVisualStyle">

@@ -1,0 +1,22 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:local="clr-namespace:Wallee.Resources">
+    <DrawingImage x:Key="Icons.ArrowDown.Gray">
+        <DrawingImage.Drawing>
+            <DrawingGroup>
+                <DrawingGroup>
+                    <GeometryDrawing Brush="#B5B5B5" Geometry="F1 M512.171,512.171z M0,0z M479.046,283.925C477.382,279.936,473.499,277.333,469.19,277.333L352.305,277.333 352.305,10.667C352.305,4.779,347.526,0,341.638,0L170.971,0C165.083,0,160.304,4.779,160.304,10.667L160.304,277.334 42.971,277.334C38.662,277.334 34.779,279.937 33.115,283.905 31.472,287.894 32.368,292.481 35.419,295.532L248.219,509.036C250.224,511.041 252.934,512.172 255.771,512.172 258.608,512.172 261.318,511.041 263.323,509.057L476.742,295.553C479.793,292.501,480.71,287.915,479.046,283.925z" />
+                </DrawingGroup>
+            </DrawingGroup>
+        </DrawingImage.Drawing>
+    </DrawingImage>
+    <DrawingImage x:Key="Icons.ArrowDown.White">
+        <DrawingImage.Drawing>
+            <DrawingGroup>
+                <DrawingGroup>
+                    <GeometryDrawing Brush="White" Geometry="F1 M512.171,512.171z M0,0z M479.046,283.925C477.382,279.936,473.499,277.333,469.19,277.333L352.305,277.333 352.305,10.667C352.305,4.779,347.526,0,341.638,0L170.971,0C165.083,0,160.304,4.779,160.304,10.667L160.304,277.334 42.971,277.334C38.662,277.334 34.779,279.937 33.115,283.905 31.472,287.894 32.368,292.481 35.419,295.532L248.219,509.036C250.224,511.041 252.934,512.172 255.771,512.172 258.608,512.172 261.318,511.041 263.323,509.057L476.742,295.553C479.793,292.501,480.71,287.915,479.046,283.925z" />
+                </DrawingGroup>
+            </DrawingGroup>
+        </DrawingImage.Drawing>
+    </DrawingImage>
+</ResourceDictionary>
