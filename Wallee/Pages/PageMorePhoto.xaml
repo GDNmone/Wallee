@@ -50,11 +50,14 @@
         </DataTemplate>
 
     </UserControl.Resources>
-    <controlBlackOut:ControlBlackOut attacheds:AttachedControlBlackOut.AspectRatioHeight="1"
-                                     attacheds:AttachedControlBlackOut.AspectRatioWidth="1">
+    <controlBlackOut:ControlBlackOut
+        OpacityOverlay="0.666"
+        attacheds:AttachedControlBlackOut.AspectRatioHeight="1"
+        attacheds:AttachedControlBlackOut.AspectRatioWidth="1">
         <controlBlackOut:ControlBlackOut.DataTemplateContentOverlay>
             <DataTemplate>
-                <userControls:UserControlViewImage PhotoShow="{Binding ElementName=ThisPage, Path=SelectPhoto, Mode=TwoWay}" />
+                <userControls:UserControlViewImage
+                    PhotoShow="{Binding ElementName=ThisPage, Path=SelectPhoto, Mode=TwoWay}" />
                 <!--<TextBlock
                     Text="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl}, Path=.}"
                     Background="Red" Foreground="White" />-->
