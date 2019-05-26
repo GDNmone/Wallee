@@ -47,6 +47,9 @@
     <Reference Include="Microsoft.CSharp">
       <HintPath>C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5\Microsoft.CSharp.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.Xaml.Behaviors, Version=1.0.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Xaml.Behaviors.Wpf.1.0.1\lib\net45\Microsoft.Xaml.Behaviors.dll</HintPath>
+    </Reference>
     <Reference Include="System">
       <HintPath>C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5\System.dll</HintPath>
     </Reference>
@@ -101,6 +104,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="UserControls\UserControlViewImage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Windows\WindowMain.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -120,6 +127,9 @@
     </Compile>
     <Compile Include="UserControls\ControlScrollEllipse.xaml.cs">
       <DependentUpon>ControlScrollEllipse.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UserControls\UserControlViewImage.xaml.cs">
+      <DependentUpon>UserControlViewImage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Utils\AsyncCommand.cs" />
     <Compile Include="Utils\ConverterStringLinkToUrl.cs" />
@@ -164,6 +174,10 @@
     <ProjectReference Include="..\Unsplasharp\Unsplasharp.csproj">
       <Project>{9d60ec53-b679-4368-8e21-13438d0a1253}</Project>
       <Name>Unsplasharp</Name>
+    </ProjectReference>
+    <ProjectReference Include="I:\gitlab\StyleFluent\StyleFluentWpf\StyleFluentWpf.csproj">
+      <Project>{47b0b2a9-b96e-4f66-a3f6-1cce53b9a509}</Project>
+      <Name>StyleFluentWpf</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
