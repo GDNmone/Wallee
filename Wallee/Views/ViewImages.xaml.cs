@@ -1,5 +1,4 @@
 ﻿using System;
-using System.IO;
 using System.Net;
 using System.Windows;
 using System.Windows.Controls;
@@ -7,14 +6,14 @@ using System.Windows.Input;
 using Microsoft.Win32;
 using Unsplasharp.Models;
 
-namespace Wallee.UserControls
+namespace Wallee.Views
 {
     /// <summary>
-    /// Interaction logic for UserControlViewImage.xaml
+    /// Interaction logic for ViewImages.xaml
     /// </summary>
-    public partial class UserControlViewImage : UserControl
+    public partial class ViewImages : UserControl
     {
-        public UserControlViewImage()
+        public ViewImages()
         {
             CommandBindings.Add(new CommandBinding(DownloadCommand, Executed_CommadnDownload));
             DataContextChanged += (sender, args) => { sender = sender; };
@@ -22,7 +21,7 @@ namespace Wallee.UserControls
         }
 
 
-        static UserControlViewImage()
+        static ViewImages()
         {
             #region Override DependencyProperties
 
@@ -31,7 +30,7 @@ namespace Wallee.UserControls
             #region Initialization DependencyProperties
 
             PhotoShowProperty = DependencyProperty.Register("PhotoShow",
-                typeof(Photo), typeof(UserControlViewImage),
+                typeof(Photo), typeof(ViewImages),
                 new PropertyMetadata(null, PhotoShow_DependencyChange));
 
             #endregion
@@ -60,7 +59,7 @@ namespace Wallee.UserControls
 
         private static void PhotoShow_DependencyChange(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            var control = d as UserControlViewImage;
+            var control = d as ViewImages;
             var value = (Photo) e.NewValue;
             //if (value != null)
             //    control.PhotoShow = value;

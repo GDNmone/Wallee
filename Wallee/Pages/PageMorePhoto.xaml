@@ -10,9 +10,10 @@
              xmlns:controlBlackOut="clr-namespace:StyleFluentWpf.CustomControls.ControlBlackOut;assembly=StyleFluentWpf"
              xmlns:system="clr-namespace:System;assembly=mscorlib"
              xmlns:converters="clr-namespace:StyleFluentWpf.Converters;assembly=StyleFluentWpf"
-             xmlns:userControls="clr-namespace:Wallee.UserControls"
              xmlns:attacheds="clr-namespace:StyleFluentWpf.Attacheds;assembly=StyleFluentWpf"
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             xmlns:customControls="clr-namespace:Wallee.CustomControls"
+             xmlns:views="clr-namespace:Wallee.Views"
              mc:Ignorable="d"
              Name="ThisPage"
              d:DesignHeight="450" d:DesignWidth="800"
@@ -57,7 +58,7 @@
         attacheds:AttachedControlBlackOut.AspectRatioWidth="1">
         <controlBlackOut:ControlBlackOut.DataTemplateContentOverlay>
             <DataTemplate>
-                <userControls:UserControlViewImage
+                <views:ViewImages
                     PhotoShow="{Binding ElementName=ThisPage, Path=SelectPhoto, Mode=TwoWay}" />
                 <!--<TextBlock
                     Text="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl}, Path=.}"

@@ -1,6 +1,6 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
-using Wallee.Windows;
+using Wallee.CustomControls;
 
 namespace Wallee.Pages
 {
@@ -16,12 +16,12 @@ namespace Wallee.Pages
 
         private void Hyperlink_OnClick_Popular(object sender, RoutedEventArgs e)
         {
-            CommandsWindow.OpenControl.Execute(new PageMorePhoto() {TextSerch = "Popular"}, this);
+            WindowMain.OpenViewModel.Execute(new PageMorePhoto() {TextSerch = "Popular"}, this);
         }
 
         private void Hyperlink_OnClick_New(object sender, RoutedEventArgs e)
         {
-            CommandsWindow.OpenControl.Execute(new PageMorePhoto() { TextSerch = "New" }, this);
+            WindowMain.OpenViewModel.Execute(new PageMorePhoto() { TextSerch = "New" }, this);
         }
     }
 }

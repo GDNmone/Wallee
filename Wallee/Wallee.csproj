@@ -104,15 +104,15 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="UserControls\ControlScrollEllipse.xaml">
+    <Page Include="CustomControls\ControlScrollEllipse.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="UserControls\UserControlViewImage.xaml">
+    <Page Include="Views\ViewImages.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Windows\WindowMain.xaml">
+    <Page Include="CustomControls\WindowMain.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -120,6 +120,7 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Models\ModelTile.cs" />
     <Compile Include="Pages\PageLogin.xaml.cs">
       <DependentUpon>PageLogin.xaml</DependentUpon>
     </Compile>
@@ -129,20 +130,22 @@
     <Compile Include="Pages\PageMorePhoto.xaml.cs">
       <DependentUpon>PageMorePhoto.xaml</DependentUpon>
     </Compile>
-    <Compile Include="UserControls\ControlScrollEllipse.xaml.cs">
+    <Compile Include="CustomControls\ControlScrollEllipse.xaml.cs">
       <DependentUpon>ControlScrollEllipse.xaml</DependentUpon>
     </Compile>
-    <Compile Include="UserControls\UserControlViewImage.xaml.cs">
-      <DependentUpon>UserControlViewImage.xaml</DependentUpon>
+    <Compile Include="Views\ViewImages.xaml.cs">
+      <DependentUpon>ViewImages.xaml</DependentUpon>
     </Compile>
     <Compile Include="Utils\AsyncCommand.cs" />
     <Compile Include="Utils\ConverterStringLinkToUrl.cs" />
     <Compile Include="Utils\IAsyncCommand.cs" />
     <Compile Include="Utils\IErrorHandler.cs" />
+    <Compile Include="Utils\MVVM\Model.cs" />
+    <Compile Include="Utils\MVVM\ViewModel.cs" />
     <Compile Include="Utils\ServiceUnsplash.cs" />
     <Compile Include="Utils\TaskUtilities.cs" />
-    <Compile Include="Windows\CommandsWindow.cs" />
-    <Compile Include="Windows\WindowMain.xaml.cs">
+    <Compile Include="ViewModels\ViewModelMain.cs" />
+    <Compile Include="CustomControls\WindowMain.xaml.cs">
       <DependentUpon>WindowMain.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
@@ -186,6 +189,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Utils\Converters\" />
+    <Folder Include="Windows\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -1,26 +1,23 @@
-﻿using System.ComponentModel;
-using System.Runtime.CompilerServices;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Input;
-using Wallee.Pages;
 
-namespace Wallee.Windows
+namespace Wallee.CustomControls
 {
     /// <summary>
     /// Логика взаимодействия для WindowMain.xaml
     /// </summary>
     public partial class WindowMain : System.Windows.Window
     {
+        public static RoutedUICommand OpenViewModel = new RoutedUICommand();
+
         public WindowMain()
         {
-            CommandBindings.Add(new CommandBinding(CommandsWindow.OpenControl,
-                (sender, args) =>
-                {
-                    Content = args.Parameter;
-                }));
+            CommandBindings.Add(new CommandBinding(OpenViewModel,
+                (sender, args) => { Content = args.Parameter; }));
 
             this.CommandBindings.Add(new CommandBinding(SystemCommands.CloseWindowCommand, this.OnCloseWindow));
-            this.CommandBindings.Add(new CommandBinding(SystemCommands.MaximizeWindowCommand, this.OnMaximizeWindow,
+            this.CommandBindings.Add(new CommandBinding(SystemCommands.MaximizeWindowCommand, 
+                    this.OnMaximizeWindow,
                 this.OnCanResizeWindow));
             this.CommandBindings.Add(new CommandBinding(SystemCommands.MinimizeWindowCommand, this.OnMinimizeWindow,
                 this.OnCanMinimizeWindow));
@@ -58,37 +55,5 @@ namespace Wallee.Windows
         {
             SystemCommands.RestoreWindow(this);
         }
-
-        private object _sourcePage = new PageMain();
-
-        #region Events
-
-        #endregion
-
-        #region Dependetcy property
-
-        #endregion
-
-
-        public object SourcePage
-        {
-            get => _sourcePage;
-            set
-            {
-                _sourcePage = value;
-                OnPropertyChanged(nameof(SourcePage));
-            }
-        }
-
-        #region System
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
-
-        #endregion
     }
 }
