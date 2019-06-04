@@ -1,4 +1,5 @@
 ﻿using System.Windows;
+using Wallee.CustomControls;
 
 namespace Wallee
 {
@@ -9,6 +10,14 @@ namespace Wallee
     {
         public App()
         {
+            
+        }
+
+        protected override void OnStartup(StartupEventArgs e)
+        {
+            base.OnStartup(e);
+            var mainWindow = new WindowMain();
+            mainWindow.ShowDialog();
         }
     }
 }

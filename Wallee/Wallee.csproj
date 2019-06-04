@@ -35,6 +35,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Didaktika.MVVM, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>I:\gitlab\Libs\Didaktika.MVVM\Didaktika.MVVM\bin\Debug\Didaktika.MVVM.dll</HintPath>
+    </Reference>
     <Reference Include="DumpExtensions, Version=1.0.1.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\DumpExtensions.1.0.1\lib\net45\DumpExtensions.dll</HintPath>
     </Reference>
@@ -49,6 +53,9 @@
     </Reference>
     <Reference Include="Microsoft.Xaml.Behaviors, Version=1.0.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Xaml.Behaviors.Wpf.1.0.1\lib\net45\Microsoft.Xaml.Behaviors.dll</HintPath>
+    </Reference>
+    <Reference Include="SimpleInjector, Version=4.6.0.0, Culture=neutral, PublicKeyToken=984cb50dea722e99, processorArchitecture=MSIL">
+      <HintPath>..\packages\SimpleInjector.4.6.0\lib\net45\SimpleInjector.dll</HintPath>
     </Reference>
     <Reference Include="System">
       <HintPath>C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.5\System.dll</HintPath>
@@ -84,7 +91,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Pages\PageMain.xaml">
+    <Page Include="Views\ViewMain.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -124,8 +131,10 @@
     <Compile Include="Pages\PageLogin.xaml.cs">
       <DependentUpon>PageLogin.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Pages\PageMain.xaml.cs">
-      <DependentUpon>PageMain.xaml</DependentUpon>
+    <Compile Include="Utils\ObservableRangeCollection.cs" />
+    <Compile Include="Utils\WpfObservableRangeCollection.cs" />
+    <Compile Include="Views\ViewMain.xaml.cs">
+      <DependentUpon>ViewMain.xaml</DependentUpon>
     </Compile>
     <Compile Include="Pages\PageMorePhoto.xaml.cs">
       <DependentUpon>PageMorePhoto.xaml</DependentUpon>
@@ -133,6 +142,7 @@
     <Compile Include="CustomControls\ControlScrollEllipse.xaml.cs">
       <DependentUpon>ControlScrollEllipse.xaml</DependentUpon>
     </Compile>
+    <Compile Include="ViewModels\ViewModelMorePhoto.cs" />
     <Compile Include="Views\ViewImages.xaml.cs">
       <DependentUpon>ViewImages.xaml</DependentUpon>
     </Compile>
@@ -168,6 +178,7 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <None Include="ClassDiagram1.cd" />
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>

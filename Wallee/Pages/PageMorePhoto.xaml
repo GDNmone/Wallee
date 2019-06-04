@@ -3,21 +3,20 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:local="clr-namespace:Wallee.Pages"
              xmlns:utils="clr-namespace:Wallee.Utils"
              xmlns:models="clr-namespace:Unsplasharp.Models;assembly=Unsplasharp"
              xmlns:Interactions="http://schemas.microsoft.com/xaml/behaviors"
              xmlns:controlBlackOut="clr-namespace:StyleFluentWpf.CustomControls.ControlBlackOut;assembly=StyleFluentWpf"
-             xmlns:system="clr-namespace:System;assembly=mscorlib"
              xmlns:converters="clr-namespace:StyleFluentWpf.Converters;assembly=StyleFluentWpf"
              xmlns:attacheds="clr-namespace:StyleFluentWpf.Attacheds;assembly=StyleFluentWpf"
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
-             xmlns:customControls="clr-namespace:Wallee.CustomControls"
              xmlns:views="clr-namespace:Wallee.Views"
+             xmlns:viewModels="clr-namespace:Wallee.ViewModels"
+             xmlns:models1="clr-namespace:Wallee.Models"
              mc:Ignorable="d"
              Name="ThisPage"
              d:DesignHeight="450" d:DesignWidth="800"
-             d:DataContext="{d:DesignInstance Type=local:PageMorePhoto}">
+             d:DataContext="{d:DesignInstance Type=viewModels:ViewModelMorePhoto}">
 
     <UserControl.Resources>
         <converters:MultiConvertorAdditionCommand x:Key="ConvertorAdditionCommand" />
@@ -27,17 +26,17 @@
             <Image Name="Image" Width="250"
                    Margin="{Binding Margin}"
                    Source="{Binding Urls, IsAsync=True, Converter={StaticResource ConverterStringLinkToUrl}}">
-                <Interactions:Interaction.Triggers>
+                <!--<Interactions:Interaction.Triggers>
                     <Interactions:EventTrigger EventName="MouseDown" SourceObject="{Binding ElementName=Image}">
                         <Interactions:InvokeCommandAction>
-                            <!--Вызов Команды о выборе изображения и о показе затемнения-->
+                            Вызов Команды о выборе изображения и о показе затемнения
                             <Interactions:InvokeCommandAction.Command>
                                 <MultiBinding Converter="{StaticResource ConvertorAdditionCommand}">
-                                    <Binding Source="{x:Static local:PageMorePhoto.CommandSelectImage}" />
+                                    <Binding Source="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl}, Path=DataContext.CommandSelectImage}" />
                                     <Binding Source="{x:Static controlBlackOut:ControlBlackOut.TurnOverlayCommand}" />
                                 </MultiBinding>
                             </Interactions:InvokeCommandAction.Command>
-                            <!--Передача изображения и параметра для показа затемнения в команды-->
+                            Передача изображения и параметра для показа затемнения в команды
                             <Interactions:InvokeCommandAction.CommandParameter>
                                 <MultiBinding Converter="{StaticResource ConvertorAdditionCommandParameter}">
                                     <Binding
@@ -47,7 +46,7 @@
                             </Interactions:InvokeCommandAction.CommandParameter>
                         </Interactions:InvokeCommandAction>
                     </Interactions:EventTrigger>
-                </Interactions:Interaction.Triggers>
+                </Interactions:Interaction.Triggers>-->
             </Image>
         </DataTemplate>
 
@@ -72,6 +71,7 @@
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
                 <RowDefinition />
                 <RowDefinition Height="30" />
             </Grid.RowDefinitions>
@@ -84,6 +84,9 @@
                 <!--Текстовое поле поиска-->
                 <Grid x:Name="WatermarkWrapper">
                     <TextBox x:Name="WaterMarkedTextBox"
+                             TextOptions.TextFormattingMode="Ideal"
+                             TextOptions.TextRenderingMode="Aliased"
+                             TextOptions.TextHintingMode="Animated"
 
                              Background="#F6F6F6" BorderThickness="1,1,0.42,1"
                              SnapsToDevicePixels="True"
@@ -91,7 +94,7 @@
                              VerticalContentAlignment="Center"
                              UseLayoutRounding="False"
                              BorderBrush="#929292" Foreground="Black" Height="32"
-                             Text="{Binding ElementName=ThisPage, Path=TextSerch, FallbackValue='Hello World'}" />
+                             Text="{Binding Path=TextSearch, FallbackValue='Hello World'}" />
                     <Grid IsHitTestVisible="False" VerticalAlignment="Center" HorizontalAlignment="Left"
                           Margin="10,5,0,5">
                         <Grid.Style>
@@ -100,7 +103,7 @@
                                 <Style.Triggers>
                                     <MultiDataTrigger>
                                         <MultiDataTrigger.Conditions>
-                                            <Condition Binding="{Binding ElementName=ThisPage, Path=TextSerch}"
+                                            <Condition Binding="{Binding Path=TextSearch}"
                                                        Value="" />
                                             <Condition
                                                 Binding="{Binding ElementName=WaterMarkedTextBox, Path=IsKeyboardFocused}"
@@ -126,7 +129,7 @@
                     </Grid>
                 </Grid>
                 <!--Кнопка поиска-->
-                <Button Grid.Column="1" Click="ButtonSearch_OnClick"
+                <Button Grid.Column="1"
                         materialDesign:ShadowAssist.ShadowDepth="Depth0"
                         materialDesign:ShadowAssist.Darken="False"
                         materialDesign:ShadowAssist.ShadowEdges="None"
@@ -137,37 +140,70 @@
                         BorderBrush="#929292"
                         BorderThickness="0.42,1,1,1"
                         Background="#E8E8E8"
-                        Command="{Binding Path=SearchCommand, IsAsync=True}"
+                        Command="{Binding Path=CommandSearch, IsAsync=True}"
+                        CommandParameter="{Binding ElementName=WaterMarkedTextBox, Path=Text}"
                         Content="Search" Style="{DynamicResource ButtonStyle1}" />
             </Grid>
+
+            <ScrollViewer Margin="20,0" VerticalScrollBarVisibility="Hidden" Grid.Row="1" HorizontalScrollBarVisibility="Auto">
+                <ItemsControl ItemsSource="{Binding ListTags}">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <StackPanel Orientation="Horizontal" />
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate DataType="{x:Type models1:ModelTile}">
+                            <TextBlock Margin="10,0">
+                                <Hyperlink
+                                    Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl}, Path=DataContext.CommandSearch, IsAsync=True}"
+                                    CommandParameter="{Binding TextSearch}"
+                                    TextDecorations="{x:Null}">
+                                    <Hyperlink.Style>
+                                        <Style TargetType="{x:Type Hyperlink}" BasedOn="{StaticResource {x:Type Hyperlink}}">
+                                            <Style.Triggers>
+                                                <Trigger Property="IsMouseOver" Value="True">
+                                                    <Setter Property="Foreground" Value="Gray"></Setter>
+                                                </Trigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </Hyperlink.Style>
+                                    <TextBlock Text="{Binding Text}" />
+                                </Hyperlink>
+                            </TextBlock>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </ScrollViewer>
             <!--Блок отображения картинок-->
             <ScrollViewer
-                Grid.Row="1"
-                attacheds:AttachedScrollViewer.TriggerInvokeCommand="0.8"
-                attacheds:AttachedScrollViewer.CommandOnTrigger="{x:Static local:PageMorePhoto.CommandNextPageImage}">
+                Grid.Row="2"
+                attacheds:AttachedScrollViewer.TriggerInvokeCommand="0.6"
+                attacheds:AttachedScrollViewer.CommandOnTrigger="{Binding CommandNextPageImage}">
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition />
                         <ColumnDefinition />
                         <ColumnDefinition />
                     </Grid.ColumnDefinitions>
-                    <ItemsControl ItemsSource="{Binding Source={x:Static utils:ServiceUnsplash.ListOne}}"
+                    <ItemsControl ItemsSource="{Binding ListColumns[0] }"
                                   ItemTemplate="{StaticResource OneImage}" />
                     <ItemsControl Grid.Column="1"
-                                  ItemsSource="{Binding Source={x:Static utils:ServiceUnsplash.ListTwo}}"
+                                  ItemsSource="{Binding ListColumns[1]}"
                                   ItemTemplate="{StaticResource OneImage}" />
                     <ItemsControl Grid.Column="2"
-                                  ItemsSource="{Binding Source={x:Static utils:ServiceUnsplash.ListThree}}"
+                                  ItemsSource="{Binding ListColumns[2]}"
                                   ItemTemplate="{StaticResource OneImage}" />
                 </Grid>
             </ScrollViewer>
-            <StackPanel Grid.Row="2" Orientation="Horizontal">
+
+            <StackPanel Grid.Row="3" Orientation="Horizontal">
                 <TextBlock Background="DarkGray" Foreground="White"
-                           Text="{Binding StringFormat=Count One \={0}, Source={x:Static utils:ServiceUnsplash.ListOne}, Path=Count}" />
+                           Text="{Binding StringFormat=Count One \={0}, Path=ListColumns[0].Count}" />
                 <TextBlock Background="DarkGray" Foreground="White"
-                           Text="{Binding StringFormat=Count Two \={0}, Source={x:Static utils:ServiceUnsplash.ListTwo}, Path=Count}" />
+                           Text="{Binding StringFormat=Count Two \={0}, Path=ListColumns[1].Count}" />
                 <TextBlock Background="DarkGray" Foreground="White"
-                           Text="{Binding StringFormat=Count Three \={0}, Source={x:Static utils:ServiceUnsplash.ListThree}, Path=Count}" />
+                           Text="{Binding StringFormat=Count Three \={0},Path=ListColumns[2].Count}" />
             </StackPanel>
         </Grid>
     </controlBlackOut:ControlBlackOut>
