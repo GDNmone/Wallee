@@ -222,7 +222,7 @@ namespace Unsplasharp.Models
 
         private Location _Location;
         private double _actualHeight;
-        private double _actualWidth;
+        private double _actualWidth ;
 
         /// <summary>
         /// Where the photo has been shot.

@@ -126,11 +126,18 @@ namespace Wallee.ViewModels
             if (!lockNextPage)
             {
                 lockNextPage = true;
-                var columns = await GetNextPhotos();
-                ListColumns[0].AddRange(columns);
+                var columnsPhoto = await GetNextPhotos();
+                //ListColumns[0].AddRange(columns);
+
+                var columns = await Resize(columnsPhoto);
+                for (int i = 0; i < countColumns; i++)
+                {
+                    ListColumns[i].AddRange(columns[i]);
+                }
                 lockNextPage = false;
             }
         }
+
 
         private void Executed_NextImage(object sender)
         {
@@ -176,8 +183,13 @@ namespace Wallee.ViewModels
             Console.WriteLine("do");
             var columnsPhoto = await ServiceUnsplash.GetPhoto(numPage, TextSearch);
 
-            ListColumns[0].AddRange(columnsPhoto);
-            OnPropertyChanged(nameof(ListColumns));
+            var columns =  await Resize(columnsPhoto);
+            for (int i = 0; i < countColumns; i++)
+            {
+                ListColumns[i].AddRange(columns[i]);
+            }
+            //ListColumns[0].AddRange(columnsPhoto);
+            //OnPropertyChanged(nameof(ListColumns));
             Console.WriteLine("completed");
         }
 
@@ -213,5 +225,50 @@ namespace Wallee.ViewModels
             numPage++;
             return await ServiceUnsplash.GetPhoto(numPage, TextSearch);
         }
+
+
+        private async Task<List<List<Photo>>> Resize(IEnumerable<Photo> photos)
+        {
+           return await Task<List<List<Photo>>>.Factory.StartNew(() =>
+            {
+                var actualWidth = 250d;
+                List<List<Photo>> ListColumns = new List<List<Photo>>();
+                for (var i = 0; i < countColumns; i++)
+                {
+                    ListColumns.Add(new List<Photo>());
+                }
+                var index = 0;
+                foreach (var photo in photos)
+                {
+                    photo.ActualWidth = actualWidth;
+                    ListColumns[index].Add(photo);
+                    index = index+1 >= countColumns ? 0 : index + 1;
+                }
+
+                var realListHeight = HeightList(this.ListColumns);
+                var newsListHeight = HeightList(ListColumns);
+
+                var newRealHeight = realListHeight.Select((d, i) => d + newsListHeight[i]).ToList();
+
+                for (int i = 0; i < countColumns; i++)
+                {
+                    var actualHeight = newRealHeight[i] / (ListColumns.Count + this.ListColumns.Count);
+                    ListColumns[i].ForEach(photo => photo.ActualHeight = actualHeight);
+                    foreach (var photo in this.ListColumns[i])
+                    {
+                        photo.ActualHeight = actualHeight;
+                    }
+                }
+
+                return ListColumns;
+            });
+        }
+
+
+        private List<double> HeightList(IEnumerable<IEnumerable<Photo>> columns)
+            => columns.Select(collection =>
+                collection.Sum(photo => photo.ActualWidth * photo.Height / photo.Width)).ToList();
+
+        private const int countColumns = 3;
     }
 }
