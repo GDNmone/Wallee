@@ -87,7 +87,11 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Page Include="Pages\PageLogin.xaml">
+    <Page Include="InitializeDataTemplate.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\ViewContainerSearch.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -95,7 +99,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Pages\PageMorePhoto.xaml">
+    <Page Include="Views\ViewMorePhoto.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -128,16 +132,16 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Models\ModelTile.cs" />
-    <Compile Include="Pages\PageLogin.xaml.cs">
-      <DependentUpon>PageLogin.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Utils\ObservableRangeCollection.cs" />
     <Compile Include="Utils\WpfObservableRangeCollection.cs" />
+    <Compile Include="Views\ViewContainerSearch.xaml.cs">
+      <DependentUpon>ViewContainerSearch.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\ViewMain.xaml.cs">
       <DependentUpon>ViewMain.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Pages\PageMorePhoto.xaml.cs">
-      <DependentUpon>PageMorePhoto.xaml</DependentUpon>
+    <Compile Include="Views\ViewMorePhoto.xaml.cs">
+      <DependentUpon>ViewMorePhoto.xaml</DependentUpon>
     </Compile>
     <Compile Include="CustomControls\ControlScrollEllipse.xaml.cs">
       <DependentUpon>ControlScrollEllipse.xaml</DependentUpon>
@@ -199,7 +203,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Utils\Converters\" />
-    <Folder Include="Windows\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

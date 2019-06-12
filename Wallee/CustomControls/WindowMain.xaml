@@ -3,10 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:viewModels="clr-namespace:Wallee.ViewModels"
         xmlns:views="clr-namespace:Wallee.Views"
-        xmlns:controlNavigation="clr-namespace:StyleFluentWpf.CustomControls.ControlNavigation;assembly=StyleFluentWpf"
-        xmlns:pages="clr-namespace:Wallee.Pages"
         mc:Ignorable="d"
         WindowStyle="None"
         Style="{StaticResource MyWindowStyle}"
@@ -15,22 +12,18 @@
         <viewModels:ViewModelMain />
     </Window.DataContext>-->
     <Window.Resources>
-        <DataTemplate DataType="{x:Type viewModels:ViewModelMorePhoto}">
-            <pages:PageMorePhoto DataContext="{Binding}" />
-        </DataTemplate>
-        <DataTemplate DataType="{x:Type viewModels:ViewModelMain}">
-            <views:ViewMain DataContext="{Binding}" />
-        </DataTemplate>
+       
     </Window.Resources>
-    <controlNavigation:ControlViewModelNavigation 
+    <views:ViewContainerSearch/>
+    <!--<controlNavigation:ControlViewModelNavigation 
         x:Name="ControlViewModelNavigation"
         VisibleNavigationPanel="Collapsed">
-        <!--<controlNavigation:ControlViewModelNavigation.Resources>
+        --><!--<controlNavigation:ControlViewModelNavigation.Resources>
 
-        </controlNavigation:ControlViewModelNavigation.Resources>-->
+        </controlNavigation:ControlViewModelNavigation.Resources>--><!--
         <controlNavigation:ControlViewModelNavigation.StartViewModel>
             <viewModels:ViewModelMain/>
         </controlNavigation:ControlViewModelNavigation.StartViewModel>
 
-    </controlNavigation:ControlViewModelNavigation>
+    </controlNavigation:ControlViewModelNavigation>-->
 </Window>
