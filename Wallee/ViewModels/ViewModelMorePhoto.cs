@@ -1,11 +1,10 @@
-﻿using System;
+﻿using Didaktika.MVVM;
+using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
-using Didaktika.MVVM;
 using Unsplasharp.Models;
 using Wallee.Models;
 using Wallee.Utils;
@@ -14,82 +13,35 @@ namespace Wallee.ViewModels
 {
     public class ViewModelMorePhoto : ViewModelNavigation
     {
-        #region Property TextSearch(string)
+        private const int countColumns = 3;
+        private int numPage = 1;
 
-        private string _textSearch;
-
-        public string TextSearch
+        public ViewModelMorePhoto(string text, List<ModelTile> listTags)
         {
-            get { return _textSearch; }
-            set
-            {
-                _textSearch = value;
-                OnPropertyChanged(nameof(TextSearch));
-            }
-        }
-
-        #endregion
-
-
-        #region Property SelectPhoto(Photo)
-
-        private Photo _selectPhoto;
-
-        public Photo SelectPhoto
-        {
-            get { return _selectPhoto; }
-            set
-            {
-                _selectPhoto = value;
-                OnPropertyChanged(nameof(SelectPhoto));
-            }
-        }
-
-        public ViewModelMorePhoto()
-        {
-            #region RegisterCommand
-
+            ListTags = listTags;
             CommandSelectImage = new CustomCommand(Executed_SelectImage);
             CommandNextImage = new CustomCommand(Executed_NextImage);
             CommandBackImage = new CustomCommand(Executed_BackImage);
             CommandNextPageImage = new CustomCommand(Executed_NextPageImage);
-            CommandSearch = new CustomCommand(ButtonSearch_OnClick);
+
 
             CommandManager.RegisterClassInputBinding(typeof(ViewModelMorePhoto),
                 new InputBinding(CommandNextImage, new KeyGesture(Key.Right)));
             CommandManager.RegisterClassInputBinding(typeof(ViewModelMorePhoto),
                 new InputBinding(CommandBackImage, new KeyGesture(Key.Left)));
 
-            //CommandNextImage.InputGestures.Add(new KeyGesture(Key.Right));
-            //CommandBackImage.InputGestures.Add(new KeyGesture(Key.Left));
-
-            #endregion
+            Task.Run(() => SearchByText(text));
         }
 
-        #endregion
-
-        private int numPage = 1;
-        private string lastQuery = ";";
-
-        #region Property ListTags(ObservableCollection<ModelTile>)
-
-        private ObservableCollection<ModelTile> _listTags;
-
-        public ObservableCollection<ModelTile> ListTags
+        private void Executed_NextImage(object sender)
         {
-            get { return _listTags; }
-            set
-            {
-                _listTags = value;
-                OnPropertyChanged(nameof(ListTags));
-            }
+            throw new NotImplementedException();
         }
 
-        #endregion
-
-        #region Commands
-
-        #region Properties
+        private void Executed_BackImage(object sender)
+        {
+            throw new NotImplementedException();
+        }
 
         /// <summary>
         /// Команда для смены выбранного изображения
@@ -111,53 +63,46 @@ namespace Wallee.ViewModels
         /// </summary>
         public CustomCommand CommandBackImage { get; }
 
-        public CustomCommand CommandSearch { get; }
 
-        #endregion
+        #region Property ListTags(List<ModelTile>)
 
+        private List<ModelTile> _listTags;
 
-        #region Methods
-
-        private bool lockNextPage = false;
-
-
-        private async void Executed_NextPageImage(object sender)
+        public List<ModelTile> ListTags
         {
-            if (!lockNextPage)
+            get { return _listTags; }
+            set
             {
-                lockNextPage = true;
-                var columnsPhoto = await GetNextPhotos();
-               
-                var columns = await GetAddedInColumns(columnsPhoto);
-                for (int i = 0; i < countColumns; i++)
-                {
-                    ListColumns[i].AddRange(columns[i]);
-                }
-                lockNextPage = false;
+                _listTags = value;
+                OnPropertyChanged(nameof(ListTags));
             }
         }
 
+        #endregion
 
-        private void Executed_NextImage(object sender)
+        private async Task<IEnumerable<Photo>> GetNextPhotos()
         {
-            throw new NotImplementedException();
+            numPage++;
+            return await ServiceUnsplash.GetPhoto(numPage, lastQuery);
         }
 
-        private void Executed_BackImage(object sender)
+        public void SearchByTag(ModelTile tag)
         {
-            throw new NotImplementedException();
-        }
-
-        private void Executed_SelectImage(object sender)
-        {
-            SelectPhoto = (Photo) sender;
         }
 
         private ModelTile RemoveTile = null;
+        private string lastQuery = ";";
 
-        private async void ButtonSearch_OnClick(object text)
+        public async Task SearchByText(string textSearch)
         {
-            TextSearch = (string) text;
+            if (lastQuery == textSearch) return;
+            else
+            {
+                foreach (var listColumn in ListColumns)
+                {
+                    listColumn.Clear();
+                }
+            }
 
             if (RemoveTile != null)
             {
@@ -165,87 +110,115 @@ namespace Wallee.ViewModels
                 RemoveTile = null;
             }
 
-            if (ListTags.Any(tile => tile.TextSearch.ToLower() == TextSearch.ToLower()))
+            if (ListTags.Any(tile => tile.TextSearch.ToLower() == lastQuery.ToLower()))
             {
-                var tileFind = ListTags.First(tile => tile.TextSearch.ToLower() == TextSearch.ToLower());
+                var tileFind = ListTags.First(tile => tile.TextSearch.ToLower() == lastQuery.ToLower());
                 RemoveTile = tileFind;
                 ListTags.Remove(tileFind);
             }
 
             Console.WriteLine("Click");
 
-            if (lastQuery == TextSearch) return;
-            lastQuery = TextSearch;
-            numPage = 1;
-            //  ServiceUnsplash.Reset();
+            lastQuery = textSearch;
 
-            Console.WriteLine("do");
-            var columnsPhoto = await ServiceUnsplash.GetPhoto(numPage, TextSearch);
-
-            var columns =  await GetAddedInColumns(columnsPhoto);
+            var columnsPhoto = await ServiceUnsplash.GetPhoto(numPage, lastQuery);
+            //if (columnsPhoto.Count() == 0) return;
+            var columns = await GetAddedInColumns(columnsPhoto);
+            if (columns.Count == 0) return;
             for (int i = 0; i < countColumns; i++)
             {
-                ListColumns[i].AddRange(columns[i]);
+               // if (ListColumns.Count-1 < i)
+               //     ListColumns.Add(new WpfObservableRangeCollection<Photo>(columns[0]));
+               // else
+                    ListColumns[i].AddRange(columns[i]);
             }
+
             //ListColumns[0].AddRange(columnsPhoto);
             //OnPropertyChanged(nameof(ListColumns));
             Console.WriteLine("completed");
         }
 
-        #endregion
-
-        #endregion
-
-
-        #region Property ListColumns(List<List<Photo>>)
-
-        private List<WpfObservableRangeCollection<Photo>> _listColumns = new List<WpfObservableRangeCollection<Photo>>()
-        {
-            new WpfObservableRangeCollection<Photo>(),
-            new WpfObservableRangeCollection<Photo>(),
-            new WpfObservableRangeCollection<Photo>(),
-        };
-
-        public List<WpfObservableRangeCollection<Photo>> ListColumns
-        {
-            get { return _listColumns; }
-            set
-            {
-                _listColumns = value;
-                OnPropertyChanged(nameof(ListColumns));
-            }
-        }
-
-        #endregion
-
-
-        private async Task<IEnumerable<Photo>> GetNextPhotos()
-        {
-            numPage++;
-            return await ServiceUnsplash.GetPhoto(numPage, TextSearch);
-        }
-
-
         private async Task<List<List<Photo>>> GetAddedInColumns(IEnumerable<Photo> photos)
         {
-           return await Task<List<List<Photo>>>.Factory.StartNew(() =>
+            return await Task<List<List<Photo>>>.Factory.StartNew(() =>
             {
                 List<List<Photo>> ListColumns = new List<List<Photo>>();
                 for (var i = 0; i < countColumns; i++)
                 {
                     ListColumns.Add(new List<Photo>());
                 }
+
                 var index = 0;
                 foreach (var photo in photos)
                 {
                     ListColumns[index].Add(photo);
-                    index = index+1 >= countColumns ? 0 : index + 1;
+                    index = index + 1 >= countColumns ? 0 : index + 1;
                 }
 
                 return ListColumns;
             });
         }
 
-        private const int countColumns = 3;
+        private bool lockNextPage = false;
+
+        private async void Executed_NextPageImage(object sender)
+        {
+            if (!lockNextPage)
+            {
+                lockNextPage = true;
+                var columnsPhoto = await GetNextPhotos();
+
+                var columns = await GetAddedInColumns(columnsPhoto);
+                for (int i = 0; i < countColumns; i++)
+                {
+                    ListColumns[i].AddRange(columns[i]);
+                }
+
+                lockNextPage = false;
+            }
+        }
+
+        #region Property ListColumns(List<List<Photo>>)
+
+        private readonly List<WpfObservableRangeCollection<Photo>> _listColumns =
+            new List<WpfObservableRangeCollection<Photo>>()
+            {
+                new WpfObservableRangeCollection<Photo>(),
+                new WpfObservableRangeCollection<Photo>(),
+                new WpfObservableRangeCollection<Photo>(),
+            };
+
+        public List<WpfObservableRangeCollection<Photo>> ListColumns
+        {
+            get { return _listColumns; }
+            //private  set
+            //  {
+            //     // _listColumns = value;
+            //      OnPropertyChanged(nameof(ListColumns));
+            //  }
+        }
+
+        #endregion
+
+        #region Property SelectPhoto(Photo)
+
+        private Photo _selectPhoto;
+
+        public Photo SelectPhoto
+        {
+            get { return _selectPhoto; }
+            set
+            {
+                _selectPhoto = value;
+                OnPropertyChanged(nameof(SelectPhoto));
+            }
+        }
+
+        #endregion
+
+        private void Executed_SelectImage(object sender)
+        {
+            SelectPhoto = (Photo) sender;
+        }
     }
 }

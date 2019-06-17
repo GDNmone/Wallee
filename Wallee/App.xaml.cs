@@ -1,4 +1,5 @@
 ﻿using System.Windows;
+using Unity;
 using Wallee.CustomControls;
 
 namespace Wallee
@@ -16,6 +17,8 @@ namespace Wallee
         protected override void OnStartup(StartupEventArgs e)
         {
             base.OnStartup(e);
+
+            IUnityContainer container = new UnityContainer();
             var mainWindow = new WindowMain();
             mainWindow.ShowDialog();
         }

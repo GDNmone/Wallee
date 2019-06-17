@@ -6,8 +6,8 @@
     <DataTemplate DataType="{x:Type viewModels:ViewModelMorePhoto}">
         <views:ViewMorePhoto DataContext="{Binding}" />
     </DataTemplate>
-    <DataTemplate DataType="{x:Type viewModels:ViewModelMain}">
-        <views:ViewMain DataContext="{Binding}" />
+    <DataTemplate DataType="{x:Type viewModels:ViewModelCategories}">
+        <views:ViewCategories DataContext="{Binding}" />
     </DataTemplate>
     <!--<DataTemplate DataType="{x:Type viewModels:ViewModelMain}">
         <views:ViewMain DataContext="{Binding}" />

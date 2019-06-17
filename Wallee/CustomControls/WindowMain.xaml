@@ -4,6 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:views="clr-namespace:Wallee.Views"
+        xmlns:viewModels="clr-namespace:Wallee.ViewModels"
         mc:Ignorable="d"
         WindowStyle="None"
         Style="{StaticResource MyWindowStyle}"
@@ -14,7 +15,11 @@
     <Window.Resources>
        
     </Window.Resources>
-    <views:ViewContainerSearch/>
+    <views:ViewContainerSearch>
+        <views:ViewContainerSearch.DataContext>
+            <viewModels:ViewModelContainerSearch/>
+        </views:ViewContainerSearch.DataContext>
+    </views:ViewContainerSearch>
     <!--<controlNavigation:ControlViewModelNavigation 
         x:Name="ControlViewModelNavigation"
         VisibleNavigationPanel="Collapsed">

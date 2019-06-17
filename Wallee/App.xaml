@@ -21,6 +21,8 @@
                 <ResourceDictionary Source="Styles/Colors.xaml" />
                 <ResourceDictionary Source="Styles/StyleWindow.xaml" />
                 <ResourceDictionary Source="Resources/Icons.xaml" />
+
+                <ResourceDictionary Source="DataTemplates.xaml" />
             </ResourceDictionary.MergedDictionaries>
             <SolidColorBrush x:Key="PrimaryHueMidBrush" Color="{StaticResource Colors.Blue.Light}" />
 

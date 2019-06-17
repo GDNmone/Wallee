@@ -1,43 +1,14 @@
-﻿using System.Collections.ObjectModel;
+﻿using System.Collections.Generic;
 using Didaktika.MVVM;
 using Wallee.Models;
 
 namespace Wallee.ViewModels
 {
-    public class ViewModelMain : ViewModelNavigation
+    public class ViewModelCategories : ViewModelNavigation
     {
-        public ViewModelMain()
-        {
-            #region RegisterCommands
+        #region Property ListTiles(List<ModelTile>)
 
-            CommandPassTag = CustomCommand<ModelTile>.CreateCommand(this, Action_PassTag);
-
-            #endregion
-        }
-
-        #region Commands
-
-        #region Fields
-
-        public CustomCommand<ModelTile> CommandPassTag { get; }
-
-        #endregion
-
-        #region Methods
-
-        private void Action_PassTag(ModelTile tile)
-        {
-            base.OpenViewModel(new ViewModelMorePhoto() {TextSearch = tile.TextSearch, ListTags = ListTiles});
-        }
-
-        #endregion
-
-        #endregion
-
-
-        #region Property ListTiles(ObservableCollection<ModelTile>)
-
-        private ObservableCollection<ModelTile> _listTiles = new ObservableCollection<ModelTile>()
+        private List<ModelTile> _listTiles = new List<ModelTile>()
         {
             new ModelTile("TEXTURES", "Textures"),
             new ModelTile("NATURE", "Nature"),
@@ -56,7 +27,7 @@ namespace Wallee.ViewModels
             new ModelTile("ARTS", "Arts"),
         };
 
-        public ObservableCollection<ModelTile> ListTiles
+        public List<ModelTile> ListTiles
         {
             get { return _listTiles; }
             set

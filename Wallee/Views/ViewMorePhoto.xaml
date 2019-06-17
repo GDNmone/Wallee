@@ -190,13 +190,13 @@
                         <ColumnDefinition />
                         <ColumnDefinition />
                     </Grid.ColumnDefinitions>
-                    <ItemsControl ItemsSource="{Binding ListColumns[0] }"
+                    <ItemsControl ItemsSource="{Binding ListColumns[0], Mode=OneWay }"
                                   ItemTemplate="{StaticResource OneImage}" />
                     <ItemsControl Grid.Column="1"
-                                  ItemsSource="{Binding ListColumns[1]}"
+                                  ItemsSource="{Binding ListColumns[1], Mode=OneWay}"
                                   ItemTemplate="{StaticResource OneImage}" />
                     <ItemsControl Grid.Column="2"
-                                  ItemsSource="{Binding ListColumns[2]}"
+                                  ItemsSource="{Binding ListColumns[2], Mode=OneWay}"
                                   ItemTemplate="{StaticResource OneImage}" />
                 </Grid>
             </ScrollViewer>

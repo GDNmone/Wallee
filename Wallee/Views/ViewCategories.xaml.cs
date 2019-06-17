@@ -3,11 +3,11 @@
 namespace Wallee.Views
 {
     /// <summary>
-    /// Логика взаимодействия для ViewMain.xaml
+    /// Логика взаимодействия для ViewCategories.xaml
     /// </summary>
-    public partial class ViewMain : UserControl
+    public partial class ViewCategories : UserControl
     {
-        public ViewMain()
+        public ViewCategories()
         {
             InitializeComponent();
         }

@@ -1,5 +1,7 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
+using Wallee.Models;
 
 namespace Wallee.Views
 {
@@ -13,6 +15,7 @@ namespace Wallee.Views
             InitializeComponent();
         }
 
+
         static ViewContainerSearch()
         {
             #region Initialize Dependency
@@ -24,7 +27,7 @@ namespace Wallee.Views
             #endregion
         }
 
-
+       
         #region DepentencyPropertys
 
         public DataTemplate TemplateContent
