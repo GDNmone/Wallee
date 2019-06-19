@@ -1,6 +1,9 @@
 ﻿using System.Windows;
 using Unity;
 using Wallee.CustomControls;
+using Wallee.Interfaces;
+using Wallee.Services;
+using Wallee.ViewModels;
 
 namespace Wallee
 {
@@ -11,7 +14,6 @@ namespace Wallee
     {
         public App()
         {
-            
         }
 
         protected override void OnStartup(StartupEventArgs e)
@@ -19,7 +21,13 @@ namespace Wallee
             base.OnStartup(e);
 
             IUnityContainer container = new UnityContainer();
-            var mainWindow = new WindowMain();
+
+            container.RegisterType<IServiceSetting, ServiceSettingStatic>();
+
+
+            var mainWindow = new WindowMain()
+                {DataContext = new ViewModelContainerSearch(container.Resolve<IServiceSetting>()) { }};
+
             mainWindow.ShowDialog();
         }
     }

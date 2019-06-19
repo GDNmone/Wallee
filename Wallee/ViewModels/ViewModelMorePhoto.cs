@@ -3,9 +3,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Windows.Controls;
 using System.Windows.Input;
 using Unsplasharp.Models;
+using Wallee.Interfaces;
 using Wallee.Models;
 using Wallee.Utils;
 
@@ -15,10 +15,12 @@ namespace Wallee.ViewModels
     {
         private const int countColumns = 3;
         private int numPage = 1;
+        private IServiceSetting serviceSetting;
 
-        public ViewModelMorePhoto(string text, List<ModelTile> listTags)
+        public ViewModelMorePhoto(IServiceSetting serviceSetting, string textSearch)
         {
-            ListTags = listTags;
+            this.serviceSetting = serviceSetting;
+
             CommandSelectImage = new CustomCommand(Executed_SelectImage);
             CommandNextImage = new CustomCommand(Executed_NextImage);
             CommandBackImage = new CustomCommand(Executed_BackImage);
@@ -30,7 +32,7 @@ namespace Wallee.ViewModels
             CommandManager.RegisterClassInputBinding(typeof(ViewModelMorePhoto),
                 new InputBinding(CommandBackImage, new KeyGesture(Key.Left)));
 
-            Task.Run(() => SearchByText(text));
+            Task.Factory.StartNew(() => SearchByText(textSearch));
         }
 
         private void Executed_NextImage(object sender)
@@ -66,14 +68,12 @@ namespace Wallee.ViewModels
 
         #region Property ListTags(List<ModelTile>)
 
-        private List<ModelTile> _listTags;
-
         public List<ModelTile> ListTags
         {
-            get { return _listTags; }
+            get { return serviceSetting.ListTags; }
             set
             {
-                _listTags = value;
+                serviceSetting.ListTags = value;
                 OnPropertyChanged(nameof(ListTags));
             }
         }
@@ -96,13 +96,13 @@ namespace Wallee.ViewModels
         public async Task SearchByText(string textSearch)
         {
             if (lastQuery == textSearch) return;
-            else
+
+
+            foreach (var listColumn in ListColumns)
             {
-                foreach (var listColumn in ListColumns)
-                {
-                    listColumn.Clear();
-                }
+                listColumn.Clear();
             }
+
 
             if (RemoveTile != null)
             {
@@ -127,10 +127,10 @@ namespace Wallee.ViewModels
             if (columns.Count == 0) return;
             for (int i = 0; i < countColumns; i++)
             {
-               // if (ListColumns.Count-1 < i)
-               //     ListColumns.Add(new WpfObservableRangeCollection<Photo>(columns[0]));
-               // else
-                    ListColumns[i].AddRange(columns[i]);
+                // if (ListColumns.Count-1 < i)
+                //     ListColumns.Add(new WpfObservableRangeCollection<Photo>(columns[0]));
+                // else
+                ListColumns[i].AddRange(columns[i]);
             }
 
             //ListColumns[0].AddRange(columnsPhoto);

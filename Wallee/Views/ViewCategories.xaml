@@ -5,11 +5,10 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:viewModels="clr-namespace:Wallee.ViewModels"
              xmlns:models="clr-namespace:Wallee.Models"
-             xmlns:views="clr-namespace:Wallee.Views"
              mc:Ignorable="d"
+             Name="this"
              d:DesignHeight="450" d:DesignWidth="800"
              d:DataContext="{d:DesignInstance Type={x:Type viewModels:ViewModelCategories}}">
-
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
@@ -29,8 +28,9 @@
                         <Rectangle Stroke="Black" StrokeThickness="0.4" />
                         <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center">
                             <Hyperlink
-                                Command="{Binding  }"
-                                CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=views:ViewContainerSearch}, Path=CommandNewSearch}"
+                                x:Name="HyperLink"
+                                Command="{Binding ElementName=this, Path=DataContext.CommandSendTag}"
+                                CommandParameter="{Binding Path=TextSearch}"
                                 FontSize="20"
                                 TextDecorations="{x:Null}" FontWeight="Thin"
                                 Foreground="Black">

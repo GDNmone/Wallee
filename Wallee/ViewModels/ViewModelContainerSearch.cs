@@ -1,13 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Windows.Input;
-using Didaktika.MVVM;
+﻿using Didaktika.MVVM;
 using StyleFluentWpf.CustomControls.ControlNavigation;
-using Unsplasharp.Models;
-using Wallee.Models;
-using Wallee.Utils;
+using System;
+using Wallee.Interfaces;
 
 namespace Wallee.ViewModels
 {
@@ -15,12 +9,15 @@ namespace Wallee.ViewModels
     {
         public ServiceNavigation ServiceNavigationSpaceImages { get; set; } = new ServiceNavigation();
         public CustomCommand CommandSearch { get; }
+        private IServiceSetting serviceSetting { get; }
 
+        public ViewModelNavigation StartViewModel { get; }
 
-        public ViewModelContainerSearch()
+        public ViewModelContainerSearch(IServiceSetting serviceSetting)
         {
-            CommandNewSearch = new CustomCommand(Action_CommandNewSearch);
-            ;
+            this.serviceSetting = serviceSetting;
+
+            StartViewModel = new ViewModelCategories(serviceSetting, ExecuteCommandSendTag);
 
             #region RegisterCommand
 
@@ -32,17 +29,10 @@ namespace Wallee.ViewModels
             #endregion
         }
 
-        private void Action_CommandNewSearch(object obj)
+        private void ExecuteCommandSendTag(object obj)
         {
-           // if (CurrentViewModel.GetType() != typeof(ViewModelMorePhoto))
-           //     ServiceNavigationSpaceImages.OpenViewModel(new ViewModelMorePhoto(((ModelTile)obj).TextSearch, new ViewModelMorePhoto(TextSearch,
-           //         CurrentViewModel is ViewModelCategories t ? t.ListTiles : new List<ModelTile>()))
-           //     { ListTags = ((ViewModelCategories) StartViewModel).ListTiles});
+            ButtonSearch_OnClick(obj);
         }
-
-
-        public CustomCommand CommandNewSearch { get; set; }
-
 
         #region Property CurrentViewModel(ViewModel)
 
@@ -60,7 +50,6 @@ namespace Wallee.ViewModels
 
         #endregion
 
-        public ViewModelNavigation StartViewModel { get; } = new ViewModelCategories();
 
         #region Property TextSearch(string)
 
@@ -94,8 +83,7 @@ namespace Wallee.ViewModels
                 Console.WriteLine("do");
             }
             else
-                ServiceNavigationSpaceImages.OpenViewModel(new ViewModelMorePhoto(TextSearch,
-                    CurrentViewModel is ViewModelCategories t ? t.ListTiles : new List<ModelTile>()));
+                ServiceNavigationSpaceImages.OpenViewModel(new ViewModelMorePhoto(serviceSetting, TextSearch));
         }
 
         #region Commands

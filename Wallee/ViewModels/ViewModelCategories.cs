@@ -1,42 +1,36 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Didaktika.MVVM;
+using Wallee.Interfaces;
 using Wallee.Models;
 
 namespace Wallee.ViewModels
 {
     public class ViewModelCategories : ViewModelNavigation
     {
-        #region Property ListTiles(List<ModelTile>)
-
-        private List<ModelTile> _listTiles = new List<ModelTile>()
+        private IServiceSetting _serviceSetting;
+        Action<object> Execute_CommandSendTag=null;
+        public ViewModelCategories(IServiceSetting serviceSetting,Action<object> execute_CommandSendTag)
         {
-            new ModelTile("TEXTURES", "Textures"),
-            new ModelTile("NATURE", "Nature"),
-            new ModelTile("CURRENT EVENTS", "News"),
-            new ModelTile("ARCHITECTURE", "Architecture"),
-            new ModelTile("BUSINESS", "Business"),
-            new ModelTile("FILM", "Film"),
-            new ModelTile("ANIMALS", "Animals"),
-            new ModelTile("TRAVEL", "Travel"),
-            new ModelTile("FASHION", "Fashion"),
-            new ModelTile("FOOD", "Food"),
-            new ModelTile("SPIRITUALITY", "Spirituality"),
-            new ModelTile("EXPERIMENTAL", "Experimental"),
-            new ModelTile("PEOPLE", "People"),
-            new ModelTile("HEALTH", "Health"),
-            new ModelTile("ARTS", "Arts"),
-        };
+            _serviceSetting = serviceSetting;
+            Execute_CommandSendTag = execute_CommandSendTag;
+            CommandSendTag = new CustomCommand(Execute_CommandSendTag);
+        }
+
+        #region Property ListTiles(List<ModelTile>)
 
         public List<ModelTile> ListTiles
         {
-            get { return _listTiles; }
+            get { return _serviceSetting.ListTags; }
             set
             {
-                _listTiles = value;
+                _serviceSetting.ListTags = value;
                 OnPropertyChanged(nameof(ListTiles));
             }
         }
 
         #endregion
+
+        public CustomCommand CommandSendTag { get; }
     }
 }

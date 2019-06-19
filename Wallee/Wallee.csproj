@@ -144,7 +144,9 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Interfaces\IServiceSetting.cs" />
     <Compile Include="Models\ModelTile.cs" />
+    <Compile Include="Services\ServiceSettingStatic.cs" />
     <Compile Include="Utils\ObservableRangeCollection.cs" />
     <Compile Include="Utils\WpfObservableRangeCollection.cs" />
     <Compile Include="ViewModels\ViewModelCategories.cs" />
