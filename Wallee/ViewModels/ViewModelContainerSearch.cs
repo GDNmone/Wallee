@@ -1,6 +1,7 @@
 ﻿using Didaktika.MVVM;
 using StyleFluentWpf.CustomControls.ControlNavigation;
 using System;
+using System.Threading.Tasks;
 using Wallee.Interfaces;
 
 namespace Wallee.ViewModels
@@ -8,7 +9,7 @@ namespace Wallee.ViewModels
     public class ViewModelContainerSearch : ViewModel
     {
         public ServiceNavigation ServiceNavigationSpaceImages { get; set; } = new ServiceNavigation();
-        public CustomCommand CommandSearch { get; }
+        public AsyncCommand CommandSearch { get; }
         private IServiceSetting serviceSetting { get; }
 
         public ViewModelNavigation StartViewModel { get; }
@@ -21,7 +22,7 @@ namespace Wallee.ViewModels
 
             #region RegisterCommand
 
-            CommandSearch = new CustomCommand(ButtonSearch_OnClick);
+            CommandSearch = new AsyncCommand(ButtonSearch_OnClick);
 
             //CommandNextImage.InputGestures.Add(new KeyGesture(Key.Right));
             //CommandBackImage.InputGestures.Add(new KeyGesture(Key.Left));
@@ -29,9 +30,9 @@ namespace Wallee.ViewModels
             #endregion
         }
 
-        private void ExecuteCommandSendTag(object obj)
+        private async void ExecuteCommandSendTag(object obj)
         {
-            ButtonSearch_OnClick(obj);
+            await ButtonSearch_OnClick(obj);
         }
 
         #region Property CurrentViewModel(ViewModel)
@@ -68,7 +69,7 @@ namespace Wallee.ViewModels
         #endregion
 
 
-        private async void ButtonSearch_OnClick(object text)
+        private async Task ButtonSearch_OnClick(object text)
         {
             TextSearch = (string) text;
 
@@ -83,7 +84,8 @@ namespace Wallee.ViewModels
                 Console.WriteLine("do");
             }
             else
-                ServiceNavigationSpaceImages.OpenViewModel(new ViewModelMorePhoto(serviceSetting, TextSearch));
+                ServiceNavigationSpaceImages.OpenViewModel(new ViewModelMorePhoto(serviceSetting, TextSearch,
+                    ButtonSearch_OnClick));
         }
 
         #region Commands

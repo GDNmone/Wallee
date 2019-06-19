@@ -8,6 +8,7 @@ using Unsplasharp.Models;
 using Wallee.Interfaces;
 using Wallee.Models;
 using Wallee.Utils;
+using AsyncCommand = Didaktika.MVVM.AsyncCommand;
 
 namespace Wallee.ViewModels
 {
@@ -17,7 +18,13 @@ namespace Wallee.ViewModels
         private int numPage = 1;
         private IServiceSetting serviceSetting;
 
-        public ViewModelMorePhoto(IServiceSetting serviceSetting, string textSearch)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="serviceSetting">Настройки</param>
+        /// <param name="textSearch">Текст поиска</param>
+        /// <param name="searchAction">Делегат для поиска по tag</param>
+        public ViewModelMorePhoto(IServiceSetting serviceSetting, string textSearch, Func<object, Task> searchAction)
         {
             this.serviceSetting = serviceSetting;
 
@@ -25,6 +32,7 @@ namespace Wallee.ViewModels
             CommandNextImage = new CustomCommand(Executed_NextImage);
             CommandBackImage = new CustomCommand(Executed_BackImage);
             CommandNextPageImage = new CustomCommand(Executed_NextPageImage);
+            CommandSearch = new AsyncCommand(searchAction);
 
 
             CommandManager.RegisterClassInputBinding(typeof(ViewModelMorePhoto),
@@ -44,6 +52,12 @@ namespace Wallee.ViewModels
         {
             throw new NotImplementedException();
         }
+
+        /// <summary>
+        /// Комманда поиска по тегу
+        /// </summary>
+        public AsyncCommand CommandSearch { get; }
+
 
         /// <summary>
         /// Команда для смены выбранного изображения
