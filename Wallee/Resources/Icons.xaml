@@ -45,4 +45,22 @@
             </DrawingGroup>
         </DrawingImage.Drawing>
     </DrawingImage>
+
+
+    <DrawingImage x:Key="Icons.Home">
+  <DrawingImage.Drawing>
+    <DrawingGroup>
+      <GeometryDrawing Geometry="F1 M16,16z M0,0z M1,8.5L1,8.5 8,2 15,8.5">
+        <GeometryDrawing.Pen>
+          <Pen Brush="#FAFAFA" Thickness="1" StartLineCap="Flat" EndLineCap="Flat" LineJoin="Miter" />
+        </GeometryDrawing.Pen>
+      </GeometryDrawing>
+      <GeometryDrawing Geometry="F1 M16,16z M0,0z M2.5,7L2.5,7 2.5,13.5 6.5,13.5 6.5,8.5 9.5,8.5 9.5,13.5 13.5,13.5 13.5,7">
+        <GeometryDrawing.Pen>
+          <Pen Brush="#FAFAFA" Thickness="1" StartLineCap="Flat" EndLineCap="Flat" LineJoin="Miter" />
+        </GeometryDrawing.Pen>
+      </GeometryDrawing>
+    </DrawingGroup>
+  </DrawingImage.Drawing>
+</DrawingImage>
 </ResourceDictionary>
