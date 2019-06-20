@@ -1,4 +1,5 @@
-﻿using System.Threading;
+﻿using System;
+using System.Threading;
 using System.Windows;
 using Unity;
 using Wallee.CustomControls;
@@ -26,11 +27,12 @@ namespace Wallee
 
             container.RegisterType<IServiceSetting, ServiceSettingStatic>();
 
-
             var mainWindow = new WindowMain()
                 {DataContext = new ViewModelContainerSearch(container.Resolve<IServiceSetting>()) { }};
-            var t = (new WindowLogin()).ShowDialog();
-            if (t == true)
+            
+
+          //  var t = (new WindowLogin()).ShowDialog();
+          //  if (t == true)
                 mainWindow.ShowDialog();
             System.Environment.Exit(7);
         }

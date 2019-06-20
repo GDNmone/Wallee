@@ -4,9 +4,14 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:views="clr-namespace:Wallee.Views"
+        xmlns:controlBlackOut="clr-namespace:StyleFluentWpf.CustomControls.ControlBlackOut;assembly=StyleFluentWpf"
         mc:Ignorable="d" ResizeMode="NoResize"
         WindowStyle="None"
+        Name="this"
         Style="{StaticResource MyWindowStyle}"
         Height="680" Width="860" >
-    <views:ViewContainerSearch DataContext="{Binding }" />
+
+    <controlBlackOut:ControlBlackOut OpacityOverlay="0.42" IsOverlay="{Binding  ElementName=this, Path=IsOverlay}">
+        <views:ViewContainerSearch x:Name="ContainerSearch" DataContext="{Binding }" />
+    </controlBlackOut:ControlBlackOut>
 </Window>

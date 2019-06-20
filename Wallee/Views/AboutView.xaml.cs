@@ -1,23 +1,16 @@
-﻿using System;
-using System.Linq;
-using System.Security.Cryptography;
-using System.Text;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Input;
-using Wallee.CustomControls;
 
 namespace Wallee.Views
 {
     /// <summary>
-    /// Interaction logic for WindowLogin.xaml
+    /// Interaction logic for AboutView.xaml
     /// </summary>
-    public partial class WindowLogin : Window
+    public partial class AboutView : Window
     {
-        public WindowLogin()
+        public AboutView()
         {
-            //CommandBindings.Add(new CommandBinding(OpenViewModel,
-            //    (sender, args) => { Content = args.Parameter; }));
-
+            InitializeComponent();
             CommandBindings.Add(new CommandBinding(SystemCommands.CloseWindowCommand, this.OnCloseWindow));
             CommandBindings.Add(new CommandBinding(SystemCommands.MaximizeWindowCommand,
                 this.OnMaximizeWindow,
@@ -28,7 +21,6 @@ namespace Wallee.Views
                 this.OnCanResizeWindow));
             InitializeComponent();
         }
-
         private void OnCanResizeWindow(object sender, CanExecuteRoutedEventArgs e)
         {
             e.CanExecute = this.ResizeMode == ResizeMode.CanResize || this.ResizeMode == ResizeMode.CanResizeWithGrip;
@@ -57,26 +49,6 @@ namespace Wallee.Views
         private void OnRestoreWindow(object target, ExecutedRoutedEventArgs e)
         {
             SystemCommands.RestoreWindow(this);
-        }
-
-        private void ButtonBase_OnClick(object sender, RoutedEventArgs e)
-        {
-            MD5 md5 = new MD5CryptoServiceProvider();
-
-            //compute hash from the bytes of text  
-            md5.ComputeHash(ASCIIEncoding.ASCII.GetBytes(PasswordBox.Password));
-
-            //get hash result after compute it  
-            var t = String.Concat(md5.Hash.ToList().Select(b => b.ToString("X")));
-
-            if (t == "2BD12A93C3012F9BB4EEA9BEC9A3FC")
-                this.DialogResult = true;
-            else
-            {
-                this.DialogResult = false;
-            }
-
-            this.Close();
         }
     }
 }

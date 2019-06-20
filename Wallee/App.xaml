@@ -27,12 +27,18 @@
             </ResourceDictionary.MergedDictionaries>
             <SolidColorBrush x:Key="PrimaryHueMidBrush" Color="{StaticResource Colors.Blue.Light}" />
 
+            <FontFamily x:Key="NotoSans">Resources/4269.ttf #BirchCTT</FontFamily>
+            
             <!--<Style TargetType="{x:Type customControls:WindowMain}" BasedOn="{StaticResource MyWindowStyle}">
                 <Style.Setters>
                     <Setter Property="WindowStyle" Value="None" />
                     <Setter Property="ResizeMode" Value="NoResize" />
                 </Style.Setters>
             </Style>-->
+
+<Style x:Key="Hatten">
+        <Setter Property="TextElement.FontFamily" Value="/Wallee;component/Resources/4269.ttf" />
+</Style>
 
             <Style TargetType="{x:Type ScrollBar}">
                 <Setter Property="Stylus.IsFlicksEnabled" Value="True" />
@@ -153,5 +159,6 @@
                 </Setter>
             </Style>
         </ResourceDictionary>
+
     </Application.Resources>
 </Application>
