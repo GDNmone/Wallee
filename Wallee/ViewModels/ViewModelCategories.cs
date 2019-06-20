@@ -9,12 +9,10 @@ namespace Wallee.ViewModels
     public class ViewModelCategories : ViewModelNavigation
     {
         private IServiceSetting _serviceSetting;
-        Action<object> Execute_CommandSendTag=null;
-        public ViewModelCategories(IServiceSetting serviceSetting,Action<object> execute_CommandSendTag)
+        public ViewModelCategories(IServiceSetting serviceSetting,Action<object> executeCommandSendTag)
         {
             _serviceSetting = serviceSetting;
-            Execute_CommandSendTag = execute_CommandSendTag;
-            CommandSendTag = new CustomCommand(Execute_CommandSendTag);
+            CommandSendTag = new CustomCommand(executeCommandSendTag);
         }
 
         #region Property ListTiles(List<ModelTile>)

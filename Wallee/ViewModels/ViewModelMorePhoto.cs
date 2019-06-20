@@ -40,7 +40,7 @@ namespace Wallee.ViewModels
             CommandManager.RegisterClassInputBinding(typeof(ViewModelMorePhoto),
                 new InputBinding(CommandBackImage, new KeyGesture(Key.Left)));
 
-            Task.Factory.StartNew(() => SearchByText(textSearch));
+          //  Task.Factory.StartNew(() => SearchByText(textSearch));
         }
 
         private void Executed_NextImage(object sender)

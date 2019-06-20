@@ -84,8 +84,12 @@ namespace Wallee.ViewModels
                 Console.WriteLine("do");
             }
             else
-                ServiceNavigationSpaceImages.OpenViewModel(new ViewModelMorePhoto(serviceSetting, TextSearch,
-                    ButtonSearch_OnClick));
+            {
+                var s = new ViewModelMorePhoto(serviceSetting, TextSearch,
+                    ButtonSearch_OnClick);
+                ServiceNavigationSpaceImages.OpenViewModel(s);
+                await s.SearchByText(TextSearch);
+            }
         }
 
         #region Commands
