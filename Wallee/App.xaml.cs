@@ -1,9 +1,11 @@
-﻿using System.Windows;
+﻿using System.Threading;
+using System.Windows;
 using Unity;
 using Wallee.CustomControls;
 using Wallee.Interfaces;
 using Wallee.Services;
 using Wallee.ViewModels;
+using Wallee.Views;
 
 namespace Wallee
 {
@@ -27,8 +29,10 @@ namespace Wallee
 
             var mainWindow = new WindowMain()
                 {DataContext = new ViewModelContainerSearch(container.Resolve<IServiceSetting>()) { }};
-
-            mainWindow.ShowDialog();
+            var t = (new WindowLogin()).ShowDialog();
+            if (t == true)
+                mainWindow.ShowDialog();
+            System.Environment.Exit(7);
         }
     }
 }

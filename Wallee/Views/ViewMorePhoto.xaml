@@ -73,7 +73,10 @@
                 <ColumnDefinition />
             </Grid.ColumnDefinitions>
 
-            <Button Padding="0,4" Margin="0,20,0,0" Command="{x:Static controlNavigation:CommandNavigation.BackViewModel}" BorderBrush="Transparent"  materialDesign:ShadowAssist.ShadowDepth="Depth0" Background="Gainsboro"  Height="Auto" VerticalAlignment="Stretch" TextBlock.TextAlignment="Center">
+            <Button Padding="0,4" Margin="0,20,0,0"
+                    Command="{x:Static controlNavigation:CommandNavigation.BackViewModel}" 
+                    BorderBrush="Transparent"  materialDesign:ShadowAssist.ShadowDepth="Depth0" 
+                    Background="Gainsboro"  Height="Auto" VerticalAlignment="Stretch" TextBlock.TextAlignment="Center">
                 <UniformGrid Rows="3"
                              Height="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Button}, Path=ActualHeight}"
                              VerticalAlignment="Stretch">

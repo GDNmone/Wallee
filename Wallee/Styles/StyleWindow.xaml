@@ -40,7 +40,7 @@
     <BooleanToVisibilityConverter x:Key="bool2VisibilityConverter" />
 
 
-    <Style x:Key="MyWindowStyle" TargetType="customControls:WindowMain">
+    <Style x:Key="MyWindowStyle" TargetType="Window">
         <Setter Property="Foreground" Value="{DynamicResource Brushes.Black}" />
         <Setter Property="Background" Value="{DynamicResource WindowBackgroundBrush}" />
         <Setter Property="ResizeMode" Value="CanResizeWithGrip" />
@@ -48,7 +48,7 @@
         <Setter Property="TextOptions.TextFormattingMode" Value="Display" />
         <Setter Property="Template">
             <Setter.Value>
-                <ControlTemplate TargetType="customControls:WindowMain">
+                <ControlTemplate TargetType="Window">
                     <Border x:Name="WindowBorder"
                             Margin="{Binding Source={x:Static SystemParameters.WindowNonClientFrameThickness}}"
                             Background="{StaticResource Brushes.White}">
