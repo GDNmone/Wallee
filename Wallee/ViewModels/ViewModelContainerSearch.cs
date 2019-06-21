@@ -76,8 +76,8 @@ namespace Wallee.ViewModels
             if (ServiceNavigationSpaceImages.CurrentViewModel is ViewModelMorePhoto moorePhoto)
             {
                 var isConnectInternet = await moorePhoto.SearchByText(TextSearch);
-
-                ServiceNavigationSpaceImages.OpenViewModel(new ViewModelLostConnection());
+                if (isConnectInternet)
+                    ServiceNavigationSpaceImages.OpenViewModel(new ViewModelLostConnection());
 
                 Console.WriteLine("do");
             }
