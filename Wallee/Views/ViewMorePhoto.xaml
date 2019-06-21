@@ -63,12 +63,12 @@
         </Grid.ColumnDefinitions>
 
         <Button Padding="0,4" Margin="0,20,0,0"
-                    Command="{x:Static controlNavigation:CommandNavigation.BackViewModel}"
-                    BorderBrush="Transparent" materialDesign:ShadowAssist.ShadowDepth="Depth0"
-                    Background="Gainsboro" Height="Auto" VerticalAlignment="Stretch" TextBlock.TextAlignment="Center">
+                Command="{x:Static controlNavigation:CommandNavigation.BackViewModel}"
+                BorderBrush="Transparent" materialDesign:ShadowAssist.ShadowDepth="Depth0"
+                Background="Gainsboro" Height="Auto" VerticalAlignment="Stretch" TextBlock.TextAlignment="Center">
             <UniformGrid Rows="3"
-                             Height="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Button}, Path=ActualHeight}"
-                             VerticalAlignment="Stretch">
+                         Height="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Button}, Path=ActualHeight}"
+                         VerticalAlignment="Stretch">
 
                 <UniformGrid DockPanel.Dock="Top" VerticalAlignment="Top" Rows="4">
                     <TextBlock>H</TextBlock>
@@ -173,7 +173,7 @@
             <!--#endregion-->
 
             <ScrollViewer Margin="20,0" VerticalScrollBarVisibility="Hidden" Grid.Row="1"
-                              Name="ScrollViewerTags" HorizontalScrollBarVisibility="Auto">
+                          Name="ScrollViewerTags" HorizontalScrollBarVisibility="Auto">
                 <ItemsControl ItemsSource="{Binding ListTags}">
                     <ItemsControl.ItemsPanel>
                         <ItemsPanelTemplate>
@@ -183,32 +183,32 @@
                     <ItemsControl.ItemTemplate>
                         <DataTemplate DataType="{x:Type models1:ModelTile}">
                             <TextBlock Margin="10,0">
-                                    <Hyperlink
-                                        Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl}, Path=DataContext.CommandSearch, IsAsync=True}"
-                                        CommandParameter="{Binding TextSearch}"
-                                        TextDecorations="{x:Null}">
-                                        <Hyperlink.Style>
-                                            <Style TargetType="{x:Type Hyperlink}"
-                                                   BasedOn="{StaticResource {x:Type Hyperlink}}">
-                                                <Style.Triggers>
-                                                    <Trigger Property="IsMouseOver" Value="True">
-                                                        <Setter Property="Foreground" Value="Gray" />
-                                                    </Trigger>
-                                                </Style.Triggers>
-                                            </Style>
-                                        </Hyperlink.Style>
-                                        <TextBlock Text="{Binding Text}" />
-                                    </Hyperlink>
-                                </TextBlock>
+                                <Hyperlink
+                                    Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl}, Path=DataContext.CommandSearch, IsAsync=True}"
+                                    CommandParameter="{Binding TextSearch}"
+                                    TextDecorations="{x:Null}">
+                                    <Hyperlink.Style>
+                                        <Style TargetType="{x:Type Hyperlink}"
+                                               BasedOn="{StaticResource {x:Type Hyperlink}}">
+                                            <Style.Triggers>
+                                                <Trigger Property="IsMouseOver" Value="True">
+                                                    <Setter Property="Foreground" Value="Gray" />
+                                                </Trigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </Hyperlink.Style>
+                                    <TextBlock Text="{Binding Text}" />
+                                </Hyperlink>
+                            </TextBlock>
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>
                 </ItemsControl>
             </ScrollViewer>
             <!--Блок отображения картинок-->
             <ScrollViewer
-                    Grid.Row="2"
-                    attacheds:AttachedScrollViewer.TriggerInvokeCommand="0.6"
-                    attacheds:AttachedScrollViewer.CommandOnTrigger="{Binding CommandNextPageImage}">
+                Grid.Row="2"
+                attacheds:AttachedScrollViewer.TriggerInvokeCommand="0.6"
+                attacheds:AttachedScrollViewer.CommandOnTrigger="{Binding CommandNextPageImage}">
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition />
@@ -216,23 +216,23 @@
                         <ColumnDefinition />
                     </Grid.ColumnDefinitions>
                     <ItemsControl ItemsSource="{Binding ListColumns[0], Mode=OneWay }"
-                                      ItemTemplate="{StaticResource OneImage}" />
+                                  ItemTemplate="{StaticResource OneImage}" />
                     <ItemsControl Grid.Column="1"
-                                      ItemsSource="{Binding ListColumns[1], Mode=OneWay}"
-                                      ItemTemplate="{StaticResource OneImage}" />
+                                  ItemsSource="{Binding ListColumns[1], Mode=OneWay}"
+                                  ItemTemplate="{StaticResource OneImage}" />
                     <ItemsControl Grid.Column="2"
-                                      ItemsSource="{Binding ListColumns[2], Mode=OneWay}"
-                                      ItemTemplate="{StaticResource OneImage}" />
+                                  ItemsSource="{Binding ListColumns[2], Mode=OneWay}"
+                                  ItemTemplate="{StaticResource OneImage}" />
                 </Grid>
             </ScrollViewer>
 
-            <StackPanel Grid.Row="3" Orientation="Horizontal">
+            <StackPanel Grid.Row="3" Visibility="Collapsed" Orientation="Horizontal">
                 <TextBlock Background="DarkGray" Foreground="White"
-                               Text="{Binding StringFormat=Count One \={0}, Path=ListColumns[0].Count}" />
+                           Text="{Binding StringFormat=Count One \={0}, Path=ListColumns[0].Count}" />
                 <TextBlock Background="DarkGray" Foreground="White"
-                               Text="{Binding StringFormat=Count Two \={0}, Path=ListColumns[1].Count}" />
+                           Text="{Binding StringFormat=Count Two \={0}, Path=ListColumns[1].Count}" />
                 <TextBlock Background="DarkGray" Foreground="White"
-                               Text="{Binding StringFormat=Count Three \={0},Path=ListColumns[2].Count}" />
+                           Text="{Binding StringFormat=Count Three \={0},Path=ListColumns[2].Count}" />
             </StackPanel>
         </Grid>
     </Grid>
