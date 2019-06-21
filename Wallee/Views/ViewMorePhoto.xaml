@@ -13,110 +13,99 @@
              xmlns:viewModels="clr-namespace:Wallee.ViewModels"
              xmlns:models1="clr-namespace:Wallee.Models"
              xmlns:controlNavigation="clr-namespace:StyleFluentWpf.CustomControls.ControlNavigation;assembly=StyleFluentWpf"
+             xmlns:Interactions="http://schemas.microsoft.com/xaml/behaviors"
              mc:Ignorable="d"
              Name="ThisPage"
              d:DesignHeight="450" d:DesignWidth="800"
              d:DataContext="{d:DesignInstance Type=viewModels:ViewModelMorePhoto}">
 
     <UserControl.Resources>
-        <converters:MultiConvertorAdditionCommand x:Key="ConvertorAdditionCommand" />
-        <converters:MultiConvertorAdditionCommandParameter x:Key="ConvertorAdditionCommandParameter" />
+
         <utils:ConverterStringLinkToUrl x:Key="ConverterStringLinkToUrl" />
         <DataTemplate x:Key="OneImage" DataType="{x:Type models:Photo}">
             <Image Name="Image" Width="250"
                    Source="{Binding Urls, IsAsync=True, Converter={StaticResource ConverterStringLinkToUrl}, FallbackValue={StaticResource Icons.Image}}">
-                <!--<Interactions:Interaction.Triggers>
+                <Image.Resources>
+                    <converters:MultiConvertorAdditionCommand x:Key="ConvertorAdditionCommand" />
+                    <converters:MultiConvertorAdditionCommandParameter x:Key="ConvertorAdditionCommandParameter" />
+                </Image.Resources>
+                <Interactions:Interaction.Triggers>
                     <Interactions:EventTrigger EventName="MouseDown" SourceObject="{Binding ElementName=Image}">
                         <Interactions:InvokeCommandAction>
-                            Вызов Команды о выборе изображения и о показе затемнения
+                            <!--Вызов Команды о выборе изображения и о показе затемнения-->
                             <Interactions:InvokeCommandAction.Command>
+                                <!--<Binding RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType=views:ViewMorePhoto}" Path="DataContext.CommandSelectImage"></Binding>-->
                                 <MultiBinding Converter="{StaticResource ConvertorAdditionCommand}">
-                                    <Binding Source="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl}, Path=DataContext.CommandSelectImage}" />
+                                    <Binding
+                                        RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType=UserControl}"
+                                        Path="DataContext.CommandSelectImage" />
                                     <Binding Source="{x:Static controlBlackOut:ControlBlackOut.TurnOverlayCommand}" />
                                 </MultiBinding>
                             </Interactions:InvokeCommandAction.Command>
-                            Передача изображения и параметра для показа затемнения в команды
+                            <!--Передача изображения и параметра для показа затемнения в команды-->
                             <Interactions:InvokeCommandAction.CommandParameter>
                                 <MultiBinding Converter="{StaticResource ConvertorAdditionCommandParameter}">
-                                    <Binding
-                                        Path="." />
+                                    <Binding Path="." />
                                     <Binding Path="." />
                                 </MultiBinding>
                             </Interactions:InvokeCommandAction.CommandParameter>
                         </Interactions:InvokeCommandAction>
                     </Interactions:EventTrigger>
-                </Interactions:Interaction.Triggers>-->
+                </Interactions:Interaction.Triggers>
             </Image>
         </DataTemplate>
 
     </UserControl.Resources>
-    <controlBlackOut:ControlBlackOut
-        OpacityOverlay="0.666"
-        attacheds:AttachedControlBlackOut.AspectRatioHeight="1"
-        attacheds:AttachedControlBlackOut.AspectRatioWidth="1">
-        <controlBlackOut:ControlBlackOut.DataTemplateContentOverlay>
-            <DataTemplate>
-                <views:ViewImages
-                    PhotoShow="{Binding Path=SelectPhoto, Mode=TwoWay}" />
-                <!--<TextBlock
-                    Text="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl}, Path=.}"
-                    Background="Red" Foreground="White" />-->
-            </DataTemplate>
-            <!--<Image Name="Image" Width="250"
-                   Source="{Binding RelativeSource={RelativeSource Mode=FindAncestor,AncestorType={x:Type local:PageMorePhoto}}, Path=SelectPhoto.Urls,  Converter={StaticResource ConverterStringLinkToUrl}}"/>-->
-            <!---->
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition />
+        </Grid.ColumnDefinitions>
 
-        </controlBlackOut:ControlBlackOut.DataTemplateContentOverlay>
-        <Grid>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition />
-            </Grid.ColumnDefinitions>
-
-            <Button Padding="0,4" Margin="0,20,0,0"
-                    Command="{x:Static controlNavigation:CommandNavigation.BackViewModel}" 
-                    BorderBrush="Transparent"  materialDesign:ShadowAssist.ShadowDepth="Depth0" 
-                    Background="Gainsboro"  Height="Auto" VerticalAlignment="Stretch" TextBlock.TextAlignment="Center">
-                <UniformGrid Rows="3"
+        <Button Padding="0,4" Margin="0,20,0,0"
+                    Command="{x:Static controlNavigation:CommandNavigation.BackViewModel}"
+                    BorderBrush="Transparent" materialDesign:ShadowAssist.ShadowDepth="Depth0"
+                    Background="Gainsboro" Height="Auto" VerticalAlignment="Stretch" TextBlock.TextAlignment="Center">
+            <UniformGrid Rows="3"
                              Height="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Button}, Path=ActualHeight}"
                              VerticalAlignment="Stretch">
 
-                    <UniformGrid DockPanel.Dock="Top" VerticalAlignment="Top" Rows="4">
-                        <TextBlock>H</TextBlock>
-                        <TextBlock>O</TextBlock>
-                        <TextBlock>M</TextBlock>
-                        <TextBlock>E</TextBlock>
-                    </UniformGrid>
+                <UniformGrid DockPanel.Dock="Top" VerticalAlignment="Top" Rows="4">
+                    <TextBlock>H</TextBlock>
+                    <TextBlock>O</TextBlock>
+                    <TextBlock>M</TextBlock>
+                    <TextBlock>E</TextBlock>
+                </UniformGrid>
 
-                    <Image Width="15" Margin="3" Height="Auto"  Source="{StaticResource Icons.Home}"></Image>
-                    <!--<TextBlock
+                <Image Width="15" Margin="3" Height="Auto" Source="{StaticResource Icons.Home}" />
+                <!--<TextBlock
                         VerticalAlignment="Center" Height="Auto" Text="+" />-->
 
-                    <UniformGrid Margin="0,0,0,15" DockPanel.Dock="Bottom" VerticalAlignment="Bottom" Rows="4">
-                        <TextBlock>P</TextBlock>
-                        <TextBlock>A</TextBlock>
-                        <TextBlock>G</TextBlock>
-                        <TextBlock>E</TextBlock>
-                    </UniformGrid>
+                <UniformGrid Margin="0,0,0,15" DockPanel.Dock="Bottom" VerticalAlignment="Bottom" Rows="4">
+                    <TextBlock>P</TextBlock>
+                    <TextBlock>A</TextBlock>
+                    <TextBlock>G</TextBlock>
+                    <TextBlock>E</TextBlock>
                 </UniformGrid>
-            </Button>
+            </UniformGrid>
+        </Button>
 
-            <Grid Grid.Column="1">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition />
-                    <RowDefinition Height="30" />
-                </Grid.RowDefinitions>
+        <Grid Grid.Column="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition />
+                <RowDefinition Height="30" />
+            </Grid.RowDefinitions>
 
-                <!--#region Блок поиска-->
-                <!--<Grid Margin="20,10">
+            <!--#region Блок поиска-->
+            <!--<Grid Margin="20,10">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition />
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions> -->
-                <!--Текстовое поле поиска-->
-                <!--
+            <!--Текстовое поле поиска-->
+            <!--
                 <Grid x:Name="WatermarkWrapper">
                     <TextBox x:Name="WaterMarkedTextBox"
                              TextOptions.TextFormattingMode="Ideal"
@@ -164,8 +153,8 @@
                     </Grid>
                 </Grid>
                 -->
-                <!--Кнопка поиска-->
-                <!--
+            <!--Кнопка поиска-->
+            <!--
                 <Button Grid.Column="1"
                         materialDesign:ShadowAssist.ShadowDepth="Depth0"
                         materialDesign:ShadowAssist.Darken="False"
@@ -181,19 +170,19 @@
                         CommandParameter="{Binding ElementName=WaterMarkedTextBox, Path=Text}"
                         Content="Search" Style="{DynamicResource ButtonStyle1}" />
             </Grid>-->
-                <!--#endregion-->
+            <!--#endregion-->
 
-                <ScrollViewer Margin="20,0" VerticalScrollBarVisibility="Hidden" Grid.Row="1"
-                      Name="ScrollViewerTags"        HorizontalScrollBarVisibility="Auto">
-                    <ItemsControl ItemsSource="{Binding ListTags}">
-                        <ItemsControl.ItemsPanel>
-                            <ItemsPanelTemplate>
-                                <StackPanel Orientation="Horizontal" />
-                            </ItemsPanelTemplate>
-                        </ItemsControl.ItemsPanel>
-                        <ItemsControl.ItemTemplate>
-                            <DataTemplate DataType="{x:Type models1:ModelTile}">
-                                <TextBlock Margin="10,0">
+            <ScrollViewer Margin="20,0" VerticalScrollBarVisibility="Hidden" Grid.Row="1"
+                              Name="ScrollViewerTags" HorizontalScrollBarVisibility="Auto">
+                <ItemsControl ItemsSource="{Binding ListTags}">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <StackPanel Orientation="Horizontal" />
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate DataType="{x:Type models1:ModelTile}">
+                            <TextBlock Margin="10,0">
                                     <Hyperlink
                                         Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl}, Path=DataContext.CommandSearch, IsAsync=True}"
                                         CommandParameter="{Binding TextSearch}"
@@ -211,41 +200,40 @@
                                         <TextBlock Text="{Binding Text}" />
                                     </Hyperlink>
                                 </TextBlock>
-                            </DataTemplate>
-                        </ItemsControl.ItemTemplate>
-                    </ItemsControl>
-                </ScrollViewer>
-                <!--Блок отображения картинок-->
-                <ScrollViewer
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </ScrollViewer>
+            <!--Блок отображения картинок-->
+            <ScrollViewer
                     Grid.Row="2"
                     attacheds:AttachedScrollViewer.TriggerInvokeCommand="0.6"
                     attacheds:AttachedScrollViewer.CommandOnTrigger="{Binding CommandNextPageImage}">
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition />
-                            <ColumnDefinition />
-                            <ColumnDefinition />
-                        </Grid.ColumnDefinitions>
-                        <ItemsControl ItemsSource="{Binding ListColumns[0], Mode=OneWay }"
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+                    <ItemsControl ItemsSource="{Binding ListColumns[0], Mode=OneWay }"
                                       ItemTemplate="{StaticResource OneImage}" />
-                        <ItemsControl Grid.Column="1"
+                    <ItemsControl Grid.Column="1"
                                       ItemsSource="{Binding ListColumns[1], Mode=OneWay}"
                                       ItemTemplate="{StaticResource OneImage}" />
-                        <ItemsControl Grid.Column="2"
+                    <ItemsControl Grid.Column="2"
                                       ItemsSource="{Binding ListColumns[2], Mode=OneWay}"
                                       ItemTemplate="{StaticResource OneImage}" />
-                    </Grid>
-                </ScrollViewer>
+                </Grid>
+            </ScrollViewer>
 
-                <StackPanel Grid.Row="3" Orientation="Horizontal">
-                    <TextBlock Background="DarkGray" Foreground="White"
+            <StackPanel Grid.Row="3" Orientation="Horizontal">
+                <TextBlock Background="DarkGray" Foreground="White"
                                Text="{Binding StringFormat=Count One \={0}, Path=ListColumns[0].Count}" />
-                    <TextBlock Background="DarkGray" Foreground="White"
+                <TextBlock Background="DarkGray" Foreground="White"
                                Text="{Binding StringFormat=Count Two \={0}, Path=ListColumns[1].Count}" />
-                    <TextBlock Background="DarkGray" Foreground="White"
+                <TextBlock Background="DarkGray" Foreground="White"
                                Text="{Binding StringFormat=Count Three \={0},Path=ListColumns[2].Count}" />
-                </StackPanel>
-            </Grid>
+            </StackPanel>
         </Grid>
-    </controlBlackOut:ControlBlackOut>
+    </Grid>
 </UserControl>

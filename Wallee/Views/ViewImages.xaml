@@ -43,7 +43,7 @@
             </Button.Style>
         </Button>
         <Image Margin="42" VerticalAlignment="Center" HorizontalAlignment="Center"
-               Source="{Binding PhotoShow.Urls, Converter={StaticResource ConverterStringLinkToUrl}, ElementName=UserControlThis}" />
+               Source="{Binding Path=PhotoShow.Urls, Converter={StaticResource ConverterStringLinkToUrl}, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=views:ViewImages}}" />
 
         <Button VerticalAlignment="Bottom" HorizontalAlignment="Right"
                 Height="32" Width="32"
