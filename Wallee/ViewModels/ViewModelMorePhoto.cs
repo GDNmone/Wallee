@@ -110,8 +110,6 @@ namespace Wallee.ViewModels
 
         public async Task<bool> SearchByText(string textSearch)
         {
-            if (lastQuery == textSearch) return true;
-
 
             foreach (var listColumn in ListColumns)
             {
@@ -135,8 +133,11 @@ namespace Wallee.ViewModels
             Console.WriteLine("Click");
 
             lastQuery = textSearch;
-            if (await ServiceUnsplash.client.GetRandomPhoto() == null) return false;
+
             var columnsPhoto = await ServiceUnsplash.GetPhoto(numPage, lastQuery);
+            if (!columnsPhoto.Any())
+                if (await ServiceUnsplash.client.GetRandomPhoto() == null)
+                    return false;
             //if (columnsPhoto.Count() == 0) return;
             var columns = await GetAddedInColumns(columnsPhoto);
             //if (columnsPhoto.Count() == 0) return false;
