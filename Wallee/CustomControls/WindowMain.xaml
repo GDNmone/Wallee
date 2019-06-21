@@ -6,20 +6,28 @@
         xmlns:views="clr-namespace:Wallee.Views"
         xmlns:controlBlackOut="clr-namespace:StyleFluentWpf.CustomControls.ControlBlackOut;assembly=StyleFluentWpf"
         xmlns:attacheds="clr-namespace:StyleFluentWpf.Attacheds;assembly=StyleFluentWpf"
+        xmlns:models="clr-namespace:Unsplasharp.Models;assembly=Unsplasharp"
         mc:Ignorable="d" ResizeMode="NoResize"
         WindowStyle="None"
         Name="this"
         Style="{StaticResource MyWindowStyle}"
-        Height="680" Width="860" >
+        Height="680" Width="860">
 
     <controlBlackOut:ControlBlackOut
-          attacheds:AttachedControlBlackOut.AspectRatioHeight="1"
+        attacheds:AttachedControlBlackOut.AspectRatioHeight="1"
         attacheds:AttachedControlBlackOut.AspectRatioWidth="1"
         OpacityOverlay="0.42" IsOverlay="{Binding  ElementName=this, Path=IsOverlay}">
-                <controlBlackOut:ControlBlackOut.DataTemplateContentOverlay>
+        <controlBlackOut:ControlBlackOut.DataTemplateContentOverlay>
             <DataTemplate>
-                <views:ViewImages
-                    PhotoShow="{Binding Path=.}" />
+
+                <ContentPresenter Content="{Binding}">
+                    <ContentPresenter.Resources>
+                        <DataTemplate DataType="{x:Type models:Photo}">
+                            <views:ViewImages
+                                PhotoShow="{Binding Path=.}" />
+                        </DataTemplate>
+                    </ContentPresenter.Resources>
+                </ContentPresenter>
                 <!--<TextBlock
                     Text="{Binding Path=.}"
                     Background="Red" Foreground="White" />-->
