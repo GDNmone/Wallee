@@ -3,6 +3,8 @@ using System.Net;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
 using Microsoft.Win32;
 using Unsplasharp.Models;
 
@@ -16,8 +18,29 @@ namespace Wallee.Views
         public ViewImages()
         {
             CommandBindings.Add(new CommandBinding(DownloadCommand, Executed_CommadnDownload));
-            DataContextChanged += (sender, args) => { sender = sender; };
+            CommandBindings.Add(new CommandBinding(PrintCommand, Executed_CommadnPrint));
             InitializeComponent();
+        }
+
+        private void Executed_CommadnPrint(object sender, ExecutedRoutedEventArgs e)
+        {
+            var bi = new BitmapImage();
+            bi.BeginInit();
+            bi.CacheOption = BitmapCacheOption.OnLoad;
+            bi.UriSource = new Uri(PhotoShow.Urls.Full);
+            bi.EndInit();
+
+            var vis = new DrawingVisual();
+            using (var dc = vis.RenderOpen())
+            {
+                dc.DrawImage(bi, new Rect {Width = bi.Width, Height = bi.Height});
+            }
+
+            var pdialog = new PrintDialog();
+            if (pdialog.ShowDialog() == true)
+            {
+                pdialog.PrintVisual(vis, PhotoShow.Description);
+            }
         }
 
 
@@ -92,6 +115,8 @@ namespace Wallee.Views
         #region Fields Commands
 
         public static RoutedCommand DownloadCommand { get; } = new RoutedCommand();
+
+        public static RoutedCommand PrintCommand { get; } = new RoutedCommand();
 
         #endregion
 

@@ -87,7 +87,7 @@
                 BorderThickness="0"
                 Background="Transparent"
                 materialDesign:ShadowAssist.ShadowDepth="Depth0"
-                Command="{x:Static views:ViewImages.DownloadCommand}">
+                Command="{x:Static views:ViewImages.PrintCommand}">
             <Button.Resources>
                 <DataTemplate DataType="{x:Type DrawingImage}">
                     <Grid>
