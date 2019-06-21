@@ -75,11 +75,9 @@ namespace Wallee.ViewModels
 
             if (ServiceNavigationSpaceImages.CurrentViewModel is ViewModelMorePhoto moorePhoto)
             {
-                await moorePhoto.SearchByText(TextSearch);
+                var isConnectInternet = await moorePhoto.SearchByText(TextSearch);
 
-
-                //numPage = 1;
-                //  ServiceUnsplash.Reset();
+                ServiceNavigationSpaceImages.OpenViewModel(new ViewModelLostConnection());
 
                 Console.WriteLine("do");
             }
@@ -87,8 +85,20 @@ namespace Wallee.ViewModels
             {
                 var s = new ViewModelMorePhoto(serviceSetting, TextSearch,
                     ButtonSearch_OnClick);
-                ServiceNavigationSpaceImages.OpenViewModel(s);
-                await s.SearchByText(TextSearch);
+                //
+                var isConnectInternet = await s.SearchByText(TextSearch);
+
+                if (ServiceNavigationSpaceImages.CurrentViewModel is ViewModelLostConnection)
+                {
+                    ServiceNavigationSpaceImages.BackViewModel();
+                }
+
+                if (isConnectInternet)
+                {
+                    ServiceNavigationSpaceImages.OpenViewModel(s);
+                }
+                else
+                    ServiceNavigationSpaceImages.OpenViewModel(new ViewModelLostConnection());
             }
         }
 

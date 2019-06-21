@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.NetworkInformation;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Unsplasharp.Models;
@@ -40,7 +41,7 @@ namespace Wallee.ViewModels
             CommandManager.RegisterClassInputBinding(typeof(ViewModelMorePhoto),
                 new InputBinding(CommandBackImage, new KeyGesture(Key.Left)));
 
-          //  Task.Factory.StartNew(() => SearchByText(textSearch));
+            //  Task.Factory.StartNew(() => SearchByText(textSearch));
         }
 
         private void Executed_NextImage(object sender)
@@ -107,9 +108,9 @@ namespace Wallee.ViewModels
         private ModelTile RemoveTile = null;
         private string lastQuery = ";";
 
-        public async Task SearchByText(string textSearch)
+        public async Task<bool> SearchByText(string textSearch)
         {
-            if (lastQuery == textSearch) return;
+            if (lastQuery == textSearch) return true;
 
 
             foreach (var listColumn in ListColumns)
@@ -134,11 +135,11 @@ namespace Wallee.ViewModels
             Console.WriteLine("Click");
 
             lastQuery = textSearch;
-
+            if (await ServiceUnsplash.client.GetRandomPhoto() == null) return false;
             var columnsPhoto = await ServiceUnsplash.GetPhoto(numPage, lastQuery);
             //if (columnsPhoto.Count() == 0) return;
             var columns = await GetAddedInColumns(columnsPhoto);
-            if (columns.Count == 0) return;
+            //if (columnsPhoto.Count() == 0) return false;
             for (int i = 0; i < countColumns; i++)
             {
                 // if (ListColumns.Count-1 < i)
@@ -150,6 +151,7 @@ namespace Wallee.ViewModels
             //ListColumns[0].AddRange(columnsPhoto);
             //OnPropertyChanged(nameof(ListColumns));
             Console.WriteLine("completed");
+            return true;
         }
 
         private async Task<List<List<Photo>>> GetAddedInColumns(IEnumerable<Photo> photos)
