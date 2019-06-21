@@ -46,15 +46,23 @@
                Source="{Binding Path=PhotoShow.Urls, Converter={StaticResource ConverterStringLinkToUrl}, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=views:ViewImages}}" />
 
         <Button VerticalAlignment="Bottom" HorizontalAlignment="Right"
-                Height="32" Width="32"
-                Padding="5"
+                Height="38" 
+                Padding="3"
                 BorderThickness="0"
                 Background="Transparent"
                 materialDesign:ShadowAssist.ShadowDepth="Depth0"
                 Command="{x:Static views:ViewImages.DownloadCommand}">
             <Button.Resources>
                 <DataTemplate DataType="{x:Type DrawingImage}">
-                    <Image Source="{Binding}" />
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+
+                        <Image Grid.Column="1" Source="{Binding}" Margin="15,0,0,0" />
+                        <TextBlock FontSize="16" VerticalAlignment="Center" Grid.Column="0" Text="D O W N L O A D" />
+                    </Grid>
                 </DataTemplate>
             </Button.Resources>
             <Button.Style>
@@ -62,9 +70,47 @@
                     <Style.Triggers>
                         <Trigger Property="IsMouseOver" Value="False">
                             <Setter Property="Content" Value="{StaticResource Icons.ArrowDown.Gray}" />
+                            <Setter Property="TextElement.Foreground" Value="#B5B5B5" />
                         </Trigger>
                         <Trigger Property="IsMouseOver" Value="True">
                             <Setter Property="Content" Value="{StaticResource Icons.ArrowDown.White}" />
+
+                            <Setter Property="TextElement.Foreground" Value="White" />
+                        </Trigger>
+                    </Style.Triggers>
+                </Style>
+            </Button.Style>
+        </Button>
+        <Button VerticalAlignment="Bottom" HorizontalAlignment="Left"
+                Height="38"
+                Padding="3"
+                BorderThickness="0"
+                Background="Transparent"
+                materialDesign:ShadowAssist.ShadowDepth="Depth0"
+                Command="{x:Static views:ViewImages.DownloadCommand}">
+            <Button.Resources>
+                <DataTemplate DataType="{x:Type DrawingImage}">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+
+                        <Image Grid.Column="0" Source="{Binding}" />
+                        <TextBlock FontSize="16" VerticalAlignment="Center" Margin="15,0,0,0"  Grid.Column="1" Text="P R I N T" />
+                    </Grid>
+                </DataTemplate>
+            </Button.Resources>
+            <Button.Style>
+                <Style TargetType="{x:Type Button}" BasedOn="{StaticResource {x:Type Button}}">
+                    <Style.Triggers>
+                        <Trigger Property="IsMouseOver" Value="False">
+                            <Setter Property="Content" Value="{StaticResource Icons.Print.Gray}" />
+                            <Setter Property="TextElement.Foreground" Value="#B5B5B5" />
+                        </Trigger>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter Property="Content" Value="{StaticResource Icons.Print.White}" />
+                             <Setter Property="TextElement.Foreground" Value="White" />
                         </Trigger>
                     </Style.Triggers>
                 </Style>
