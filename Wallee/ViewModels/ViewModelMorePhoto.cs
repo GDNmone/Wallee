@@ -1,10 +1,12 @@
 ﻿using Didaktika.MVVM;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Net;
 using System.Net.NetworkInformation;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Input;
 using StyleFluentWpf.CustomControls.ControlNavigation;
 using Unsplasharp.Models;
@@ -155,6 +157,7 @@ namespace Wallee.ViewModels
 
         public async Task<bool> SearchByText(string textSearch)
         {
+            Stopwatch stopwatch = Stopwatch.StartNew();
             foreach (var listColumn in ListColumns)
             {
                 listColumn.Clear();
@@ -192,6 +195,7 @@ namespace Wallee.ViewModels
                 // else
                 ListColumns[i].AddRange(columns[i]);
             }
+
 
             //ListColumns[0].AddRange(columnsPhoto);
             //OnPropertyChanged(nameof(ListColumns));

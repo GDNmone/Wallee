@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Net;
 using System.Windows;
 using System.Windows.Controls;
@@ -21,14 +22,49 @@ namespace Wallee.Views
             CommandBindings.Add(new CommandBinding(PrintCommand, Executed_CommadnPrint));
             InitializeComponent();
         }
-
-        private void Executed_CommadnPrint(object sender, ExecutedRoutedEventArgs e)
+        public static BitmapImage GetBitmapImage(byte[] bytes)
         {
-            var bi = new BitmapImage();
-            bi.BeginInit();
-            bi.CacheOption = BitmapCacheOption.OnLoad;
-            bi.UriSource = new Uri(PhotoShow.Urls.Full);
-            bi.EndInit();
+            if (bytes == null || bytes.Length == 0) return null;
+            var image = new BitmapImage();
+            using (var mem = new MemoryStream(bytes))
+            {
+                using (FileStream fs = new FileStream(Environment.CurrentDirectory + "p.jpg", FileMode.Create))
+                {
+                    fs.Write(bytes, 0, bytes.Length);
+                }
+
+                mem.Position = 0;
+                image.BeginInit();
+                image.CreateOptions = BitmapCreateOptions.PreservePixelFormat;
+                image.CacheOption = BitmapCacheOption.OnLoad;
+                image.UriSource = null;
+                image.StreamSource = mem;
+                image.EndInit();
+            }
+
+            image.Freeze();
+            return image;
+        }
+
+        private async void Executed_CommadnPrint(object sender, ExecutedRoutedEventArgs e)
+        {
+            BitmapImage bi;
+            try
+            {
+                using (WebClient client = new WebClient())
+                {
+                    var k = await client.DownloadDataTaskAsync(PhotoShow.Urls.Regular);
+                    bi = GetBitmapImage(k);
+
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error of download image, please check connect");
+                return;
+            }          
+           
+
 
             var vis = new DrawingVisual();
             using (var dc = vis.RenderOpen())
