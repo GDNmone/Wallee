@@ -2,9 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net.NetworkInformation;
 using System.Threading.Tasks;
-using System.Windows.Input;
 using Unsplasharp.Models;
 using Wallee.Interfaces;
 using Wallee.Models;
@@ -13,11 +11,12 @@ using AsyncCommand = Didaktika.MVVM.AsyncCommand;
 
 namespace Wallee.ViewModels
 {
-    public class ViewModelMorePhoto : ViewModelNavigation
+    public class ViewModelMorePhoto : ViewModelNavigation, ICloneable
     {
         private const int countColumns = 3;
         private int numPage = 1;
         private IServiceSetting serviceSetting;
+        private Func<object, Task> searchAction;
 
         /// <summary>
         /// 
@@ -25,9 +24,10 @@ namespace Wallee.ViewModels
         /// <param name="serviceSetting">Настройки</param>
         /// <param name="textSearch">Текст поиска</param>
         /// <param name="searchAction">Делегат для поиска по tag</param>
-        public ViewModelMorePhoto(IServiceSetting serviceSetting, string textSearch, Func<object, Task> searchAction)
+        public ViewModelMorePhoto(IServiceSetting serviceSetting, Func<object, Task> searchAction)
         {
             this.serviceSetting = serviceSetting;
+            this.searchAction = searchAction;
 
             CommandSelectImage = new CustomCommand(Executed_SelectImage);
             CommandNextImage = new CustomCommand(Executed_NextImage);
@@ -36,10 +36,10 @@ namespace Wallee.ViewModels
             CommandSearch = new AsyncCommand(searchAction);
 
 
-            CommandManager.RegisterClassInputBinding(typeof(ViewModelMorePhoto),
-                new InputBinding(CommandNextImage, new KeyGesture(Key.Right)));
-            CommandManager.RegisterClassInputBinding(typeof(ViewModelMorePhoto),
-                new InputBinding(CommandBackImage, new KeyGesture(Key.Left)));
+            //CommandManager.RegisterClassInputBinding(typeof(ViewModelMorePhoto),
+            //    new InputBinding(CommandNextImage, new KeyGesture(Key.Right)));
+            //CommandManager.RegisterClassInputBinding(typeof(ViewModelMorePhoto),
+            //    new InputBinding(CommandBackImage, new KeyGesture(Key.Left)));
 
             //  Task.Factory.StartNew(() => SearchByText(textSearch));
         }
@@ -98,7 +98,7 @@ namespace Wallee.ViewModels
         private async Task<IEnumerable<Photo>> GetNextPhotos()
         {
             numPage++;
-            return await ServiceUnsplash.GetPhoto(numPage, lastQuery);
+            return await ServiceUnsplash.GetPhoto(numPage, LastQuery);
         }
 
         public void SearchByTag(ModelTile tag)
@@ -106,11 +106,10 @@ namespace Wallee.ViewModels
         }
 
         private ModelTile RemoveTile = null;
-        private string lastQuery = ";";
+        public string LastQuery { get; private set; } = ";";
 
         public async Task<bool> SearchByText(string textSearch)
         {
-
             foreach (var listColumn in ListColumns)
             {
                 listColumn.Clear();
@@ -123,18 +122,18 @@ namespace Wallee.ViewModels
                 RemoveTile = null;
             }
 
-            if (ListTags.Any(tile => tile.TextSearch.ToLower() == lastQuery.ToLower()))
+            if (ListTags.Any(tile => tile.TextSearch.ToLower() == LastQuery.ToLower()))
             {
-                var tileFind = ListTags.First(tile => tile.TextSearch.ToLower() == lastQuery.ToLower());
+                var tileFind = ListTags.First(tile => tile.TextSearch.ToLower() == LastQuery.ToLower());
                 RemoveTile = tileFind;
                 ListTags.Remove(tileFind);
             }
 
             Console.WriteLine("Click");
 
-            lastQuery = textSearch;
+            LastQuery = textSearch;
 
-            var columnsPhoto = await ServiceUnsplash.GetPhoto(numPage, lastQuery);
+            var columnsPhoto = await ServiceUnsplash.GetPhoto(numPage, LastQuery);
             if (!columnsPhoto.Any())
                 if (await ServiceUnsplash.client.GetRandomPhoto() == null)
                     return false;
@@ -197,7 +196,7 @@ namespace Wallee.ViewModels
 
         #region Property ListColumns(List<List<Photo>>)
 
-        private readonly List<WpfObservableRangeCollection<Photo>> _listColumns =
+        private List<WpfObservableRangeCollection<Photo>> _listColumns =
             new List<WpfObservableRangeCollection<Photo>>()
             {
                 new WpfObservableRangeCollection<Photo>(),
@@ -220,6 +219,7 @@ namespace Wallee.ViewModels
         #region Property SelectPhoto(Photo)
 
         private Photo _selectPhoto;
+        private Action _scrollUpAction;
 
         public Photo SelectPhoto
         {
@@ -231,11 +231,34 @@ namespace Wallee.ViewModels
             }
         }
 
+        public Action ScrollUpAction
+        {
+            get => _scrollUpAction;
+            set => _scrollUpAction = value;
+        }
+
         #endregion
 
         private void Executed_SelectImage(object sender)
         {
             SelectPhoto = (Photo) sender;
+        }
+
+        public object Clone()
+        {
+            var t = new ViewModelMorePhoto(serviceSetting, searchAction);
+            t.LastQuery = (string) this.LastQuery.Clone();
+            t.ListTags = new List<ModelTile>(this.ListTags);
+            t._listColumns = new List<WpfObservableRangeCollection<Photo>>(this._listColumns);
+            t.RemoveTile = this.RemoveTile;
+            t.lockNextPage = this.lockNextPage;
+            t._scrollUpAction = this._scrollUpAction;
+            return t;
+        }
+
+        public void ScrollUp()
+        {
+            ScrollUpAction?.Invoke();
         }
     }
 }
