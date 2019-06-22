@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using StyleFluentWpf.CustomControls.ControlNavigation;
 using Unsplasharp.Models;
 using Wallee.Interfaces;
 using Wallee.Models;
@@ -16,6 +17,7 @@ namespace Wallee.ViewModels
         private const int countColumns = 3;
         private int numPage = 1;
         private IServiceSetting serviceSetting;
+        private ServiceNavigation serviceNavigation;
         private Func<object, Task> searchAction;
 
         /// <summary>
@@ -24,10 +26,12 @@ namespace Wallee.ViewModels
         /// <param name="serviceSetting">Настройки</param>
         /// <param name="textSearch">Текст поиска</param>
         /// <param name="searchAction">Делегат для поиска по tag</param>
-        public ViewModelMorePhoto(IServiceSetting serviceSetting, Func<object, Task> searchAction)
+        public ViewModelMorePhoto(IServiceSetting serviceSetting, Func<object, Task> searchAction,
+            ServiceNavigation serviceNavigation)
         {
             this.serviceSetting = serviceSetting;
             this.searchAction = searchAction;
+            this.serviceNavigation = serviceNavigation;
 
             CommandSelectImage = new CustomCommand(Executed_SelectImage);
             CommandNextImage = new CustomCommand(Executed_NextImage);
@@ -183,6 +187,11 @@ namespace Wallee.ViewModels
             {
                 lockNextPage = true;
                 var columnsPhoto = await GetNextPhotos();
+                if (columnsPhoto.Count() == 0)
+                    if (await ServiceUnsplash.client.GetRandomPhoto() == null)
+                    {
+                        this.serviceNavigation.OpenViewModel(new ViewModelLostConnection());
+                    }
 
                 var columns = await GetAddedInColumns(columnsPhoto);
                 for (int i = 0; i < countColumns; i++)
@@ -246,7 +255,7 @@ namespace Wallee.ViewModels
 
         public object Clone()
         {
-            var t = new ViewModelMorePhoto(serviceSetting, searchAction);
+            var t = new ViewModelMorePhoto(serviceSetting, searchAction, serviceNavigation);
             t.LastQuery = (string) this.LastQuery.Clone();
             t.ListTags = new List<ModelTile>(this.ListTags);
             t._listColumns = new List<WpfObservableRangeCollection<Photo>>(this._listColumns);

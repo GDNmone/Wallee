@@ -91,7 +91,7 @@ namespace Wallee.ViewModels
             }
             else
             {
-                var s = new ViewModelMorePhoto(serviceSetting, ButtonSearch_OnClick);
+                var s = new ViewModelMorePhoto(serviceSetting, ButtonSearch_OnClick, ServiceNavigationSpaceImages);
                 //
                 var isConnectInternet = await s.SearchByText(TextSearch);
 
