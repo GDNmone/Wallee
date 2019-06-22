@@ -2,7 +2,10 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
+using System.Net.NetworkInformation;
 using System.Threading.Tasks;
+using System.Windows.Input;
 using StyleFluentWpf.CustomControls.ControlNavigation;
 using Unsplasharp.Models;
 using Wallee.Interfaces;
@@ -33,10 +36,11 @@ namespace Wallee.ViewModels
             this.searchAction = searchAction;
             this.serviceNavigation = serviceNavigation;
 
-            CommandSelectImage = new CustomCommand(Executed_SelectImage);
+            CommandSelectImage = new CustomCommand(Executed_SelectImage, CanExecut_CommandSelectImage);
             CommandNextImage = new CustomCommand(Executed_NextImage);
             CommandBackImage = new CustomCommand(Executed_BackImage);
             CommandNextPageImage = new CustomCommand(Executed_NextPageImage);
+            CommandLostConnect = new CustomCommand(Executed_LostConnect);
             CommandSearch = new AsyncCommand(searchAction);
 
 
@@ -46,6 +50,39 @@ namespace Wallee.ViewModels
             //    new InputBinding(CommandBackImage, new KeyGesture(Key.Left)));
 
             //  Task.Factory.StartNew(() => SearchByText(textSearch));
+        }
+
+        private bool CanExecut_CommandSelectImage(object obj)
+        {
+            var photo = (Photo) obj;
+            if (CheckConnect(photo.Urls.Thumbnail))
+                return true;
+            else
+                serviceNavigation.OpenViewModel(new ViewModelLostConnection());
+            return false;
+
+            bool CheckConnect(string remoteUri)
+            {
+                var request = System.Net.WebRequest.Create(remoteUri);
+                request.Timeout = 300;
+                try
+                {
+                    using (var response = request.GetResponse())
+                        if (response.ContentLength > 0) // Or add more validate. eg. checksum
+                            return true;
+                }
+                catch
+                {
+                    return false;
+                }
+
+                return true;
+            }
+        }
+
+        private void Executed_LostConnect(object obj)
+        {
+            serviceNavigation.OpenViewModel(new ViewModelLostConnection());
         }
 
         private void Executed_NextImage(object sender)
@@ -63,6 +100,10 @@ namespace Wallee.ViewModels
         /// </summary>
         public AsyncCommand CommandSearch { get; }
 
+        /// <summary>
+        /// Команда для выброса отображения о потери соединения
+        /// </summary>
+        public CustomCommand CommandLostConnect { get; set; }
 
         /// <summary>
         /// Команда для смены выбранного изображения
@@ -250,6 +291,7 @@ namespace Wallee.ViewModels
 
         private void Executed_SelectImage(object sender)
         {
+            var photo = (Photo) sender;
             SelectPhoto = (Photo) sender;
         }
 
