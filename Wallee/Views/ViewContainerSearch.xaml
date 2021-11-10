@@ -1,0 +1,96 @@
+﻿<UserControl x:Class="Wallee.Views.ViewContainerSearch"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:local="clr-namespace:Wallee.Views"
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             xmlns:controlNavigation="clr-namespace:StyleFluentWpf.CustomControls.ControlNavigation;assembly=StyleFluentWpf"
+             xmlns:viewModels="clr-namespace:Wallee.ViewModels"
+             mc:Ignorable="d"
+             d:DesignHeight="450" d:DesignWidth="800"
+             d:DataContext="{d:DesignInstance viewModels:ViewModelContainerSearch}">
+    <Grid Margin="20,10">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition />
+        </Grid.RowDefinitions>
+
+        <!--#region Блок Поиска-->
+        <Grid Margin="20,10">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <!--Текстовое поле поиска-->
+            <Grid x:Name="WatermarkWrapper">
+                <TextBox x:Name="WaterMarkedTextBox"
+                         TextOptions.TextFormattingMode="Ideal"
+                         TextOptions.TextRenderingMode="Aliased"
+                         TextOptions.TextHintingMode="Animated"
+
+                         Background="#F6F6F6" BorderThickness="1,1,0.42,1"
+                         SnapsToDevicePixels="True"
+                         Padding="5,0"
+                         VerticalContentAlignment="Center"
+                         UseLayoutRounding="False"
+                         BorderBrush="#929292" Foreground="Black" Height="32"
+                         Text="{Binding Path=TextSearch, FallbackValue='Hello World'}" />
+                <Grid IsHitTestVisible="False" VerticalAlignment="Center" HorizontalAlignment="Left"
+                      Margin="10,5,0,5">
+                    <Grid.Style>
+                        <Style TargetType="{x:Type Grid}">
+                            <Setter Property="Visibility" Value="Collapsed" />
+                            <Style.Triggers>
+                                <MultiDataTrigger>
+                                    <MultiDataTrigger.Conditions>
+                                        <Condition Binding="{Binding Path=TextSearch}"
+                                                   Value="" />
+                                        <Condition
+                                            Binding="{Binding ElementName=WaterMarkedTextBox, Path=IsKeyboardFocused}"
+                                            Value="False" />
+                                    </MultiDataTrigger.Conditions>
+                                    <MultiDataTrigger.Setters>
+                                        <Setter Property="Visibility" Value="Visible" />
+                                    </MultiDataTrigger.Setters>
+                                </MultiDataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Grid.Style>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition />
+                        <ColumnDefinition Width="7.42" />
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+                    <Image
+                        Height="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=Grid}, Path=ActualHeight}"
+                        Source="{StaticResource Icons.Search.DarkGray}" />
+                    <TextBlock Grid.Column="2" Foreground="Gray" VerticalAlignment="Center" FontSize="14"
+                               Text="Поиск..." />
+                </Grid>
+            </Grid>
+            <!--Кнопка поиска-->
+            <Button Grid.Column="1"
+                    materialDesign:ShadowAssist.ShadowDepth="Depth0"
+                    materialDesign:ShadowAssist.Darken="False"
+                    materialDesign:ShadowAssist.ShadowEdges="None"
+                    Foreground="Black"
+                    SnapsToDevicePixels="True"
+                    FontWeight="Light"
+                    UseLayoutRounding="False"
+                    BorderBrush="#929292"
+                    BorderThickness="0.42,1,1,1"
+                    Background="#E8E8E8"
+                    Command="{Binding Path=CommandSearch, IsAsync=True}"
+                    CommandParameter="{Binding ElementName=WaterMarkedTextBox, Path=Text}"
+                    Content="Search" Style="{DynamicResource ButtonStyle1}" />
+        </Grid>
+
+        <!--#endregion-->
+
+        <controlNavigation:ControlViewModelNavigation
+            Grid.Row="1"
+            ServiceNavigation="{Binding ServiceNavigationSpaceImages}"
+            VisibleNavigationPanel="Collapsed" StartViewModel="{Binding StartViewModel, Mode=OneWay}" />
+    </Grid>
+</UserControl>

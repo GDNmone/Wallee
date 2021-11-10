@@ -10,41 +10,27 @@ namespace Unsplasharp.Models
     /// </summary>
     public class Photo : INotifyPropertyChanged
     {
-        #region Property Margin(Thickness)
 
-        private Thickness _Margin;
 
-        public Thickness Margin
-        {
-            get { return _Margin; }
-            set
-            {
-                _Margin = value;
-                NotifyPropertyChanged(nameof(Margin));
-            }
-        }
-
-        #endregion
-
-        public double ActualHeight
-        {
-            get => _actualHeight;
-            set
-            {
-                _actualHeight = value;
-                _actualWidth = (double) Height / (double) Width * value;
-            }
-        }
-
-        public double ActualWidth
-        {
-            get => _actualWidth;
-            set
-            {
-                _actualWidth = value;
-                _actualHeight = (double) Height / (double) Width * value;
-            }
-        }
+      //  public double ActualHeight
+      //  {
+      //      get => _actualHeight;
+      //      set
+      //      {
+      //          _actualHeight = value;
+      //          _actualWidth = (double) Height / (double) Width * value;
+      //      }
+      //  }
+      //
+      //  public double ActualWidth
+      //  {
+      //      get => _actualWidth;
+      //      set
+      //      {
+      //          _actualWidth = value;
+      //          _actualHeight = (double) Height / (double) Width * value;
+      //      }
+      //  }
 
 
         #region simple properties
@@ -222,7 +208,7 @@ namespace Unsplasharp.Models
 
         private Location _Location;
         private double _actualHeight;
-        private double _actualWidth;
+        private double _actualWidth ;
 
         /// <summary>
         /// Where the photo has been shot.

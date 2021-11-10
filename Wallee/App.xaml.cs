@@ -1,11 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Data;
-using System.Linq;
-using System.Threading.Tasks;
+using System.Threading;
 using System.Windows;
-using Wallee.Utils;
+using Unity;
+using Wallee.CustomControls;
+using Wallee.Interfaces;
+using Wallee.Services;
+using Wallee.ViewModels;
+using Wallee.Views;
 
 namespace Wallee
 {
@@ -16,6 +17,24 @@ namespace Wallee
     {
         public App()
         {
+        }
+
+        protected override void OnStartup(StartupEventArgs e)
+        {
+            base.OnStartup(e);
+
+            IUnityContainer container = new UnityContainer();
+
+            container.RegisterType<IServiceSetting, ServiceSettingStatic>();
+
+            var mainWindow = new WindowMain()
+                {DataContext = new ViewModelContainerSearch(container.Resolve<IServiceSetting>()) { }};
+            
+
+          //  var t = (new WindowLogin()).ShowDialog();
+          //  if (t == true)
+                mainWindow.ShowDialog();
+            System.Environment.Exit(7);
         }
     }
 }
